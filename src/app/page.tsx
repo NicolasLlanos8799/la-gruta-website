@@ -1,7 +1,7 @@
 const looks = [
-  { name: "Color sin reglas", note: "Piezas para salir de lo de siempre", image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1000&q=85" },
-  { name: "Texturas que hablan", note: "Detalles que hacen la diferencia", image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1000&q=85" },
-  { name: "Otra forma de mirar", note: "Moda, arte y personalidad", image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1000&q=85" },
+  { name: "Color sin reglas", note: "Piezas para salir de lo de siempre", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/eaa82b1b-8281-4ef2-98fa-85bcf56a0bbe.webp" },
+  { name: "Texturas que hablan", note: "Detalles que hacen la diferencia", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/31a0b136-f1bc-4b2b-8913-015cd818d4fa.webp" },
+  { name: "Otra forma de mirar", note: "Moda, arte y personalidad", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/131e0f0b-68d8-4aa2-b933-2d280f9b11f8.webp" },
 ];
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
     </header>
     <section className="hero" id="top">
       <div className="hero-copy"><p className="eyebrow">BARCELONA · MODA Y ARTE</p><h1>Ropa diferente.<br/><em>Otra manera</em><br/>de mirar.</h1><p className="intro">Una tienda para quienes encuentran belleza en lo inesperado. Moda, color y piezas con personalidad.</p><a className="button dark" href="#coleccion">Descubrir La Gruta ↗</a></div>
-      <div className="hero-art"><div className="burst"/><div className="hero-photo"><img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1200&q=90" alt="Look editorial de moda"/></div><span className="stamp">MODA<br/>& ARTE<br/>BARCELONA</span></div>
+      <div className="hero-art"><div className="burst"/><div className="hero-photo"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/c2d2e046-21aa-4aa1-94e1-ea4ba23b7bc9.webp" alt="Look editorial de La Gruta"/></div><span className="stamp">MODA<br/>& ARTE<br/>BARCELONA</span></div>
     </section>
     <section className="manifesto"><p className="eyebrow">NO ES SOLO ROPA</p><h2>Un poco de <em>arte.</em> Un poco de caos. Y mucho de <span>personalidad.</span></h2><b>✳</b></section>
     <section className="collection section" id="coleccion"><div className="section-head"><div><p className="eyebrow">UNA SELECCIÓN CON CARÁCTER</p><h2>Lo nuevo en<br/><em>La Gruta.</em></h2></div><a href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">Ver novedades en Instagram ↗</a></div><div className="looks">{looks.map((look,i)=><article className="look" key={look.name}><div className="look-image"><img src={look.image} alt={look.name}/><small>0{i+1}</small></div><h3>{look.name}</h3><p>{look.note}</p></article>)}</div></section>
