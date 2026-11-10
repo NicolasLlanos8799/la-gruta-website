@@ -8,25 +8,22 @@ const looks = [
 export default function Home() {
   return <main>
     <header className="site-header">
-      <a className="brand" href="#top">la gruta<span>✳</span></a>
-      <nav><a href="#coleccion">Colección</a><a href="#historia">La Gruta</a><a href="#visitanos">Visítanos</a></nav>
-      <a className="social-link" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">Instagram ↗</a>
+      <a className="brand gruta-brand" href="#top"><span>la</span><strong>Gruta</strong><small>MODA &amp; ARTE</small></a>
+      <nav><a href="#coleccion">Tienda</a><a href="#coleccion">Colecciones</a><a href="#historia">Arte</a><a href="#historia">Sobre La Gruta</a></nav>
+      <div className="header-tools" aria-label="Accesos"><a href="#coleccion" aria-label="Buscar" className="search-icon"></a><a href="#coleccion" aria-label="Bolsa" className="bag-icon"></a></div>
     </header>
 
-    <section className="hero" id="top">
+    <section className="hero hero-reference" id="top">
       <div className="hero-sunburst" aria-hidden="true" />
       <div className="hero-copy">
-        <p className="eyebrow hero-kicker">BARCELONA · MODA Y ARTE</p>
-        <h1>Viste<br/><em>distinto.</em><br/>Vive a color.</h1>
-        <p className="intro">Una tienda para quienes encuentran belleza en lo inesperado. Moda, arte y piezas con personalidad.</p>
-        <a className="button hero-button" href="#coleccion">Descubrir La Gruta <span>↗</span></a>
+        <p className="eyebrow hero-kicker">MODA &amp; ARTE</p>
+        <h1>Ropa con<br/><span>identidad</span></h1>
+        <p className="intro">Prendas únicas, arte textil y piezas especiales que celebran el color, la creatividad y la expresión personal.</p>
+        <a className="button hero-button" href="#coleccion">Ver tienda <span>→</span></a>
       </div>
       <div className="hero-art">
-        <div className="hero-photo"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/c2d2e046-21aa-4aa1-94e1-ea4ba23b7bc9.webp" alt="Look editorial de La Gruta"/></div>
-        <span className="hero-sticker">NO<br/>MORE<br/>BORING<br/>CLOTHES!</span>
-        <span className="hero-side-note">UNA MIRADA DIFERENTE · DESDE BARCELONA</span>
+        <div className="hero-photo"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/c2d2e046-21aa-4aa1-94e1-ea4ba23b7bc9.webp" alt="Look de moda colorido de La Gruta"/></div>
       </div>
-      <div className="hero-bottom"><span>MODA CON PERSONALIDAD</span><span>✳</span><span>ARTE PARA LLEVAR</span></div>
     </section>
 
     <section className="manifesto">
