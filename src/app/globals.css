@@ -11,3 +11,51 @@ footer{padding:42px 8vw 28px;display:flex;align-items:end;justify-content:space-
 @media(max-width:1000px){.hero{padding-left:6vw;padding-right:6vw;gap:2vw}.hero-sunburst{right:-18%;width:650px;height:650px}.hero-art{height:470px}.looks{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.look-image{height:420px}.visit{grid-template-columns:.7fr 1fr;gap:35px}.visit-info{grid-column:2}.visit-shape{grid-row:span 2}}
 @media(max-width:700px){.site-header{height:70px;padding:0 6vw}.brand{font-size:29px}.site-header nav{display:none}.hero{grid-template-columns:1fr;padding:55px 7vw 75px;gap:10px}.hero h1{font-size:clamp(64px,15vw,96px)}.hero-sunburst{width:680px;height:680px;right:-48%;top:53%;opacity:1}.hero-art{height:390px;margin:0 -2vw}.hero-photo{width:65%;height:88%}.hero-sticker{width:100px;height:100px;font-size:11px;right:0}.hero-side-note{right:-3px}.hero-bottom{height:42px;font-size:8px;letter-spacing:.12em}.manifesto{padding:60px 8vw}.manifesto h2{font-size:clamp(39px,9vw,58px)}.manifesto-doodle{right:3%;top:7%;font-size:42px}.manifesto-note{left:4%;bottom:5%;font-size:8px}.section{padding:70px 7vw}.section-head{display:block}.section-head>a{display:inline-block;margin-top:18px}.looks{gap:14px}.look{padding:8px 8px 15px}.look:nth-child(2),.look:nth-child(4){margin-top:28px}.look-image{height:clamp(220px,65vw,330px);border-width:4px}.look h3{font-size:18px;line-height:1.1}.look p{font-size:10px;line-height:1.5}.collection-ribbon{margin:55px -8vw -70px;font-size:10px}.story{grid-template-columns:1fr}.story-image{min-height:390px;padding:30px 7vw}.story-copy{padding:60px 9vw;min-height:430px}.story-copy h2{font-size:68px}.story-flower{font-size:160px}.visit{padding:65px 8vw;display:flex;flex-direction:column;align-items:flex-start;gap:24px}.visit-shape{width:135px;height:135px;font-size:18px;border-width:5px}.visit h2{font-size:68px;margin:20px 0}.visit-info{width:100%;margin-top:10px;padding-left:20px}footer{padding:35px 7vw 25px;gap:24px;align-items:flex-start;flex-wrap:wrap}footer>div{width:100%}.footer-social{margin-right:auto}}
 @media(max-width:390px){.looks{grid-template-columns:1fr}.look,.look:nth-child(2),.look:nth-child(4){margin-top:0;transform:none}.look-image{height:390px}.hero-art{height:330px}.hero-sunburst{right:-72%;width:620px;height:620px}}
+
+/* Hero editorial inspirado en la nueva dirección visual de La Gruta */
+.site-header{height:130px;padding:0 5.4vw;background:#fff4e7;border:0;align-items:center}
+.gruta-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:.76;letter-spacing:-2px;color:#073d32;font-family:Georgia,serif}
+.gruta-brand span{font-size:37px;font-weight:700;margin:0 0 2px}
+.gruta-brand strong{font-size:49px;font-weight:900}
+.gruta-brand small{font:700 10px/1 Arial,sans-serif;letter-spacing:.1em;margin-top:12px}
+.site-header nav{gap:clamp(24px,3.4vw,58px);font-size:clamp(13px,1.35vw,18px);font-weight:600;letter-spacing:0;text-transform:none;color:#101010}
+.header-tools{display:flex;align-items:center;gap:38px}
+.header-tools a{display:block;position:relative;width:30px;height:34px;color:#101010}
+.search-icon:before{content:"";position:absolute;width:17px;height:17px;border:2px solid currentColor;border-radius:50%;left:1px;top:2px}
+.search-icon:after{content:"";position:absolute;width:11px;height:2px;background:currentColor;transform:rotate(48deg);left:17px;top:22px;border-radius:2px}
+.bag-icon:before{content:"";position:absolute;left:2px;top:10px;width:23px;height:21px;border:2px solid currentColor;border-radius:3px}
+.bag-icon:after{content:"";position:absolute;left:8px;top:2px;width:11px;height:13px;border:2px solid currentColor;border-bottom:0;border-radius:9px 9px 0 0}
+.hero-reference{min-height:calc(100svh - 130px);height:810px;max-height:920px;padding:50px 5.4vw 70px;grid-template-columns:.92fr 1.08fr;gap:0;background:#fff4e7;align-items:center}
+.hero-reference .hero-sunburst{position:absolute;inset:0;width:100%;height:100%;right:auto;top:auto;transform:none;border-radius:0;background:repeating-conic-gradient(from -17deg at 73% 40%,#fff4e7 0deg 8deg,#7d1f32 8deg 17deg,#fff4e7 17deg 25deg,#f6ad48 25deg 34deg,#fff4e7 34deg 42deg,#073d32 42deg 51deg,#fff4e7 51deg 60deg,#e99591 60deg 69deg,#fff4e7 69deg 78deg);opacity:1}
+.hero-reference .hero-copy{max-width:650px;z-index:3;align-self:center;padding-bottom:25px}
+.hero-reference .hero-kicker{display:block;background:transparent;color:#101c19;padding:0;font-size:clamp(13px,1.35vw,19px);letter-spacing:.34em;margin:0 0 32px}
+.hero-reference h1{font:900 clamp(76px,8vw,132px)/.83 Georgia,serif;letter-spacing:-.075em;color:#073d32;margin:0 0 28px}
+.hero-reference h1 span{white-space:nowrap}
+.hero-reference .intro{max-width:460px;font-size:clamp(16px,1.55vw,23px);line-height:1.45;color:#17231f;margin:0 0 40px}
+.hero-reference .hero-button{background:#073d32;color:#fff;border-radius:60px;padding:22px 45px;font-size:clamp(15px,1.4vw,21px);font-weight:700;box-shadow:none}
+.hero-reference .hero-button span{margin-left:18px;font-size:1.35em}
+.hero-reference .hero-art{height:100%;width:100%;position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
+.hero-reference .hero-photo{width:min(100%,690px);height:100%;border:0;border-radius:0;box-shadow:none;transform:none;overflow:hidden;background:transparent}
+.hero-reference .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;mix-blend-mode:multiply}
+.hero-reference .hero-bottom,.hero-reference .hero-sticker,.hero-reference .hero-side-note{display:none}
+@media(max-width:900px){
+ .site-header{height:100px;padding:0 5vw}.gruta-brand span{font-size:29px}.gruta-brand strong{font-size:39px}.gruta-brand small{font-size:8px;margin-top:10px}
+ .site-header nav{gap:18px;font-size:13px}.header-tools{gap:18px}
+ .hero-reference{height:auto;min-height:760px;padding:48px 5vw 30px;grid-template-columns:.9fr 1.1fr}
+ .hero-reference h1{font-size:clamp(66px,8.5vw,100px)}
+ .hero-reference .hero-photo{height:680px}
+}
+@media(max-width:650px){
+ .site-header{height:82px;padding:0 6vw}.gruta-brand span{font-size:25px}.gruta-brand strong{font-size:34px}.gruta-brand small{font-size:7px;margin-top:9px}
+ .site-header nav{display:none}.header-tools{gap:16px}
+ .hero-reference{min-height:790px;height:auto;display:flex;flex-direction:column;align-items:stretch;padding:55px 6vw 0;gap:0}
+ .hero-reference .hero-sunburst{background:repeating-conic-gradient(from -12deg at 75% 58%,#fff4e7 0deg 8deg,#7d1f32 8deg 17deg,#fff4e7 17deg 25deg,#f6ad48 25deg 34deg,#fff4e7 34deg 42deg,#073d32 42deg 51deg,#fff4e7 51deg 60deg,#e99591 60deg 69deg,#fff4e7 69deg 78deg)}
+ .hero-reference .hero-copy{padding:0;max-width:100%}
+ .hero-reference .hero-kicker{font-size:12px;margin-bottom:23px}
+ .hero-reference h1{font-size:clamp(58px,13vw,88px);margin-bottom:20px}
+ .hero-reference h1 span{white-space:normal}
+ .hero-reference .intro{font-size:15px;max-width:340px;margin-bottom:25px}
+ .hero-reference .hero-button{padding:16px 28px;font-size:15px}
+ .hero-reference .hero-art{height:400px;margin:0 -6vw -1px;align-items:flex-end}
+ .hero-reference .hero-photo{height:100%;width:100%;max-width:470px}
+}
