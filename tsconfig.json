@@ -24,7 +24,9 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "allowJs": true,
+    "skipLibCheck": true
   },
   "include": [
     "next-env.d.ts",

@@ -1,41 +1,40 @@
-const looks = [
-  { name: "Color sin reglas", note: "Piezas para salir de lo de siempre", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/eaa82b1b-8281-4ef2-98fa-85bcf56a0bbe.webp", tone: "look-pink" },
-  { name: "Texturas que hablan", note: "Detalles que hacen la diferencia", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/31a0b136-f1bc-4b2b-8913-015cd818d4fa.webp", tone: "look-yellow" },
-  { name: "Otra forma de mirar", note: "Moda, arte y personalidad", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/3291fd62-7b21-4762-aa18-bb1c5660248f.webp", tone: "look-blue" },
-  { name: "Detalles inesperados", note: "Una selección para expresarte", image: "https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/94746fb6-1ae2-44b7-8829-ecd6aa0f3990.webp", tone: "look-orange" },
-];
+import Link from "next/link";
+import HeroScroll from "@/components/HeroScroll";
 
 export default function Home() {
   return <main>
     <header className="site-header">
-      <a className="brand gruta-brand" href="#top"><span>la</span><strong>Gruta</strong><small>MODA &amp; ARTE</small></a>
-      <nav><a href="#coleccion">Tienda</a><a href="#coleccion">Colecciones</a><a href="#historia">Arte</a><a href="#historia">Sobre La Gruta</a></nav>
-      <div className="header-tools" aria-label="Accesos"><a href="#coleccion" aria-label="Buscar" className="search-icon"></a><a href="#coleccion" aria-label="Bolsa" className="bag-icon"></a></div>
+      <a className="brand gruta-brand" href="#top"><img className="gruta-logo" src="/images/la-gruta-logo.png" alt="La Gruta — Moda &amp; Arte" /></a>
+      <nav><Link href="/tienda">Tienda minorista</Link><Link href="/mayorista">Tienda mayorista</Link><a href="#coleccion">Colecciones</a><a href="#historia">Sobre La Gruta</a></nav>
+      <div className="header-tools" aria-label="Accesos"><Link href="/tienda" aria-label="Buscar" className="search-icon"></Link><Link href="/tienda" aria-label="Bolsa" className="bag-icon"></Link></div>
     </header>
 
     <section className="hero hero-reference" id="top">
+      <HeroScroll />
       <div className="hero-sunburst" aria-hidden="true" />
+      <picture>
+        <source media="(max-width: 650px)" srcSet="/images/la-gruta-hero-mobile-model.png" />
+        <img className="hero-model" src="/hero-model.png" alt="Modelo sentada con ropa estampada" />
+      </picture>
       <div className="hero-copy">
         <p className="eyebrow hero-kicker">MODA &amp; ARTE</p>
         <h1>Ropa con<br/><span>identidad</span></h1>
         <p className="intro">Prendas únicas, arte textil y piezas especiales que celebran el color, la creatividad y la expresión personal.</p>
-        <a className="button hero-button" href="#coleccion">Ver tienda <span>→</span></a>
-      </div>
-      <div className="hero-art">
-        <div className="hero-photo"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/c2d2e046-21aa-4aa1-94e1-ea4ba23b7bc9.webp" alt="Look de moda colorido de La Gruta"/></div>
+        <Link className="button hero-button" href="/tienda">Ver tienda</Link><Link className="hero-wholesale" href="/mayorista">Tienda mayorista →</Link>
       </div>
     </section>
 
-    <section className="manifesto">
-      <p className="eyebrow">NO ES SOLO ROPA</p>
-      <h2>Un poco de <em>arte.</em><br/>Un poco de caos.<br/><span>Mucho de personalidad.</span></h2>
-      <div className="manifesto-doodle">✳</div><span className="manifesto-note">BE YOUR<br/>OWN MUSE</span>
-    </section>
-
-    <section className="collection section" id="coleccion">
-      <div className="section-head"><div><p className="eyebrow">UNA SELECCIÓN CON CARÁCTER</p><h2>Lo nuevo en<br/><em>La Gruta.</em></h2></div><a href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">Ver novedades en Instagram ↗</a></div>
-      <div className="looks">{looks.map((look,i)=><article className={`look ${look.tone}`} key={look.name}><div className="look-image"><img src={look.image} alt={look.name}/><small>0{i+1}</small><span className="look-spark">✳</span></div><h3>{look.name}</h3><p>{look.note}</p></article>)}</div>
-      <div className="collection-ribbon"><span>COLOR · ARTE · MODA · ACTITUD ·</span><span>COLOR · ARTE · MODA · ACTITUD ·</span></div>
+    <section className="collection-editorial" id="coleccion" aria-labelledby="collection-title">
+      <div className="collection-editorial-copy">
+        <p className="eyebrow">DESCUBRE LA COLECCIÓN</p>
+        <h2 id="collection-title">Explora<br/>nuestra tienda<br/><em>online.</em></h2>
+        <p className="collection-editorial-description">Ropa, accesorios y piezas únicas con la esencia de La Gruta.</p>
+        <Link className="collection-editorial-button" href="/tienda">Ver tienda <span aria-hidden="true">→</span></Link>
+      </div>
+      <div className="collection-editorial-art">
+        <img src="/images/la-gruta-collection-editorial.png" alt="Jerséis coloridos de La Gruta en perchas de madera" />
+        <svg width="0" height="0" aria-hidden="true" focusable="false" style={{position:"absolute"}}><defs><clipPath id="collection-blob" clipPathUnits="objectBoundingBox"><path d="M0.2,0.14 C0.249,0.088 0.317,0.083 0.39,0.06 C0.463,0.037 0.563,0.005 0.64,0 C0.717,-0.005 0.795,0.010 0.85,0.03 C0.905,0.050 0.945,0.067 0.97,0.12 C0.995,0.173 0.995,0.250 1,0.35 C1.005,0.450 1.018,0.628 1,0.72 C0.982,0.812 0.936,0.854 0.89,0.9 C0.844,0.946 0.794,0.988 0.725,0.995 C0.656,1.002 0.544,0.942 0.475,0.94 C0.406,0.938 0.366,0.982 0.31,0.98 C0.254,0.978 0.182,0.957 0.14,0.93 C0.098,0.903 0.083,0.867 0.06,0.82 C0.037,0.773 0.006,0.702 0,0.65 C-0.006,0.598 0.009,0.557 0.025,0.51 C0.041,0.463 0.067,0.432 0.096,0.37 C0.125,0.308 0.151,0.192 0.2,0.14 Z"/></clipPath></defs></svg>
+      </div>
     </section>
 
     <section className="story" id="historia">

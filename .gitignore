@@ -6,3 +6,8 @@ build
 *.tsbuildinfo
 next-env.d.ts
 .env*
+
+# datos locales del panel admin
+/data
+/public/uploads
+.vercel
