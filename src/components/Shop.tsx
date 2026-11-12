@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AutoRefresh from "./AutoRefresh";
+import LangSwitch from "./LangSwitch";
+import { LOCALE_LABELS, fmt, type Locale } from "@/i18n/config";
+import { getDictionary, type Dict } from "@/i18n/dictionaries";
 import ProductImage from "./ProductImage";
 import {
   FREE_SHIPPING_FROM,
@@ -10,31 +13,39 @@ import {
   WHOLESALE_MIN_ORDER,
   WHOLESALE_MIN_UNITS,
   whatsappLink,
-  formatPrice,
+  formatPrice as formatPriceIntl,
   type Product,
 } from "@/lib/products";
 
 type CartLine = { id: string; qty: number };
 type Sort = "destacados" | "precio-asc" | "precio-desc";
+const ALL = "__all__"; // valor interno del filtro "Todo" (no se traduce)
 
 const STORAGE_PREFIX = "la-gruta-cart-v2";
 const MAX_QTY = 9;
 
 export default function Shop({
+  lang,
   mode = "retail",
   products: all,
   categories: categoryOrder,
 }: {
+  lang: Locale;
   mode?: "retail" | "wholesale";
   products: Product[];
   categories: string[];
 }) {
   const wholesale = mode === "wholesale";
+  const d = getDictionary(lang);
+  const t = d.shop;
+  const base = `/${lang}`;
+  const intl = LOCALE_LABELS[lang].intl;
+  const formatPrice = useCallback((n: number) => formatPriceIntl(n, intl), [intl]);
   // La tienda mayorista solo muestra productos con precio mayorista.
   const PRODUCTS = useMemo(() => (wholesale ? all.filter((p) => p.wholesalePrice !== null) : all), [all, wholesale]);
   const byId = useCallback((id: string) => PRODUCTS.find((p) => p.id === id), [PRODUCTS]);
   const CATEGORIES = useMemo(
-    () => ["Todo", ...categoryOrder.filter((c) => PRODUCTS.some((p) => p.category === c))],
+    () => [ALL, ...categoryOrder.filter((c) => PRODUCTS.some((p) => p.category === c))],
     [PRODUCTS, categoryOrder],
   );
   const STORAGE_KEY = `${STORAGE_PREFIX}-${mode}`;
@@ -45,7 +56,7 @@ export default function Shop({
     },
     [wholesale, byId],
   );
-  const [category, setCategory] = useState<string>("Todo");
+  const [category, setCategory] = useState<string>(ALL);
   const [sort, setSort] = useState<Sort>("destacados");
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<CartLine[]>([]);
@@ -103,7 +114,7 @@ export default function Shop({
     const q = query.trim().toLowerCase();
     let list = PRODUCTS.filter(
       (p) =>
-        (category === "Todo" || p.category === category) &&
+        (category === ALL || p.category === category) &&
         (!q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)),
     );
     if (sort === "precio-asc") list = [...list].sort((a, b) => priceOf(a.id) - priceOf(b.id));
@@ -135,8 +146,8 @@ export default function Shop({
       next[i] = { ...next[i], qty: Math.min(MAX_QTY, next[i].qty + (qty ?? 1)) };
       return next;
     });
-    setToast(`${p.name} añadido a la bolsa`);
-  }, [wholesale]);
+    setToast(fmt(t.toastAdded, { name: p.name }));
+  }, [wholesale, t]);
 
   const changeQty = (id: string, delta: number) =>
     setCart((prev) =>
@@ -156,48 +167,52 @@ export default function Shop({
     <div className="shop">
       <AutoRefresh />
       <header className="site-header">
-        <Link className="brand gruta-brand" href="/" aria-label="La Gruta — inicio">
-          <img className="gruta-logo" src="/images/la-gruta-logo.png" alt="La Gruta — Moda &amp; Arte" />
+        <Link className="brand gruta-brand" href={base} aria-label={t.brandAria}>
+          <img className="gruta-logo" src="/images/la-gruta-logo.png" alt={d.common.logoAlt} />
         </Link>
         <nav>
-          <Link href="/#coleccion">Colecciones</Link>
-          <Link href="/#historia">Sobre La Gruta</Link>
-          <Link href="/tienda" aria-current={!wholesale ? "page" : undefined}>Minorista</Link>
-          <Link href="/mayorista" aria-current={wholesale ? "page" : undefined}>Mayorista</Link>
+          <Link href={`${base}#coleccion`}>{t.navCollections}</Link>
+          <Link href={`${base}#historia`}>{t.navAbout}</Link>
+          <Link href={`${base}/tienda`} aria-current={!wholesale ? "page" : undefined}>{t.navRetail}</Link>
+          <Link href={`${base}/mayorista`} aria-current={wholesale ? "page" : undefined}>{t.navWholesale}</Link>
         </nav>
-        <div className="header-tools" aria-label="Accesos">
-          <button className="search-icon" aria-label="Buscar" onClick={() => document.getElementById("buscar")?.focus()} />
-          <button className="bag-icon" onClick={() => setCartOpen(true)} aria-label={`Abrir bolsa, ${count} artículos`}>
+        <div className="header-tools" aria-label={t.tools}>
+          <LangSwitch lang={lang} label={d.common.language} />
+          <button className="search-icon" aria-label={t.search} onClick={() => document.getElementById("buscar")?.focus()} />
+          <button className="bag-icon" onClick={() => setCartOpen(true)} aria-label={fmt(t.openBag, { n: count })}>
             {count > 0 && <span className="bag-count">{count}</span>}
           </button>
         </div>
       </header>
 
       <section className="shop-hero">
-        <p className="eyebrow">{wholesale ? "SOLO PARA TIENDAS · PRECIOS MAYORISTAS" : "DESCUBRE LA COLECCIÓN"}</p>
+        <p className="eyebrow">{wholesale ? t.heroEyebrowWholesale : t.heroEyebrowRetail}</p>
         <h1>
-          {wholesale ? (<>Tienda<br />mayorista<em>.</em></>) : (<>Nuestra<br />tienda <em>online.</em></>)}
+          {(() => {
+            const [a, b, em] = wholesale ? t.heroWholesale : t.heroRetail;
+            return (<>{a}<br />{b}<em>{em}</em></>);
+          })()}
         </h1>
         <p>
           {wholesale
-            ? `Mínimo ${WHOLESALE_MIN_UNITS} unidades por referencia y ${formatPrice(WHOLESALE_MIN_ORDER)} por pedido. Cerramos el pedido por WhatsApp.`
-            : "Ropa, accesorios y piezas únicas con la esencia de La Gruta."}
+            ? fmt(t.heroTextWholesale, { units: WHOLESALE_MIN_UNITS, amount: formatPrice(WHOLESALE_MIN_ORDER) })
+            : t.heroTextRetail}
         </p>
       </section>
 
-      <div className="store-switch" role="tablist" aria-label="Tipo de tienda">
-        <Link href="/tienda" role="tab" aria-selected={!wholesale} className={!wholesale ? "on" : ""}>
-          <strong>Tienda minorista</strong>
-          <span>Para ti · compra desde 1 prenda</span>
+      <div className="store-switch" role="tablist" aria-label={t.switchLabel}>
+        <Link href={`${base}/tienda`} role="tab" aria-selected={!wholesale} className={!wholesale ? "on" : ""}>
+          <strong>{t.retailTitle}</strong>
+          <span>{t.retailSub}</span>
         </Link>
-        <Link href="/mayorista" role="tab" aria-selected={wholesale} className={wholesale ? "on" : ""}>
-          <strong>Tienda mayorista</strong>
-          <span>Para tiendas · desde {WHOLESALE_MIN_UNITS} uds por referencia</span>
+        <Link href={`${base}/mayorista`} role="tab" aria-selected={wholesale} className={wholesale ? "on" : ""}>
+          <strong>{t.wholesaleTitle}</strong>
+          <span>{fmt(t.wholesaleSub, { units: WHOLESALE_MIN_UNITS })}</span>
         </Link>
       </div>
 
-      <section className="shop-toolbar" aria-label="Filtros">
-        <div className="chips" role="tablist" aria-label="Categorías">
+      <section className="shop-toolbar" aria-label={t.filters}>
+        <div className="chips" role="tablist" aria-label={t.categories}>
           {CATEGORIES.map((c) => (
             <button
               key={c}
@@ -206,7 +221,7 @@ export default function Shop({
               className={category === c ? "chip on" : "chip"}
               onClick={() => setCategory(c)}
             >
-              {c}
+              {c === ALL ? t.all : c}
             </button>
           ))}
         </div>
@@ -214,41 +229,41 @@ export default function Shop({
           <input
             type="search"
             id="buscar"
-            placeholder="Buscar…"
+            placeholder={t.searchPlaceholder}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            aria-label="Buscar productos"
+            aria-label={t.searchAria}
           />
-          <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Ordenar">
-            <option value="destacados">Destacados</option>
-            <option value="precio-asc">Precio: menor a mayor</option>
-            <option value="precio-desc">Precio: mayor a menor</option>
+          <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label={t.sortAria}>
+            <option value="destacados">{t.sortFeatured}</option>
+            <option value="precio-asc">{t.sortPriceAsc}</option>
+            <option value="precio-desc">{t.sortPriceDesc}</option>
           </select>
         </div>
       </section>
 
       <main className="catalog" id="catalogo">
         <p className="result-count" aria-live="polite">
-          {visible.length} {visible.length === 1 ? "producto" : "productos"}
+          {visible.length} {visible.length === 1 ? t.productOne : t.productMany}
         </p>
         {visible.length === 0 ? (
           <div className="empty">
-            <p>No encontramos nada con esa búsqueda.</p>
+            <p>{t.empty}</p>
             <button
               className="btn-ghost"
               onClick={() => {
                 setQuery("");
-                setCategory("Todo");
+                setCategory(ALL);
               }}
             >
-              Ver todo
+              {t.showAll}
             </button>
           </div>
         ) : (
           <ul className="grid">
             {visible.map((p) => (
               <li key={p.id} className="card">
-                <button className="card-media" onClick={() => openQuick(p)} aria-label={`Ver ${p.name}`}>
+                <button className="card-media" onClick={() => openQuick(p)} aria-label={fmt(t.view, { name: p.name })}>
                   <ProductImage product={p} />
                   {p.badge && <span className="badge">{p.badge}</span>}
                 </button>
@@ -260,7 +275,7 @@ export default function Shop({
                   <p className="price">{formatPrice(priceOf(p.id))}</p>
                 </div>
                 <button className="btn-add" onClick={() => add(p)}>
-                  Añadir a la bolsa
+                  {t.addToBag}
                 </button>
               </li>
             ))}
@@ -270,19 +285,19 @@ export default function Shop({
 
       <footer className="shop-footer">
         <p>
-          ¿Dudas o quieres una pieza especial? Escríbenos por{" "}
-          <a href={whatsappLink("Hola La Gruta!")} target="_blank" rel="noreferrer">
+          {t.footerHelp}{" "}
+          <a href={whatsappLink(t.wa.hello)} target="_blank" rel="noreferrer">
             WhatsApp ↗
           </a>
         </p>
-        <small>© LA GRUTA 2026 · Moda y arte · Barcelona</small>
+        <small>{t.footerSmall}</small>
       </footer>
 
       {/* Vista de producto (pop-up) */}
       {quick && (
         <div className="overlay" onClick={() => setQuick(null)}>
           <div className="modal product-modal" role="dialog" aria-modal="true" aria-label={quick.name} onClick={(e) => e.stopPropagation()}>
-            <button className="close" onClick={() => setQuick(null)} aria-label="Cerrar">
+            <button className="close" onClick={() => setQuick(null)} aria-label={t.close}>
               ✕
             </button>
             <div className="modal-media">
@@ -294,12 +309,12 @@ export default function Shop({
               <h2>{quick.name}</h2>
               <p className="price big">
                 {formatPrice(priceOf(quick.id))}
-                {wholesale && <small> / ud · mayorista</small>}
+                {wholesale && <small>{t.perUnit}</small>}
               </p>
               {quick.description && <p className="desc">{quick.description}</p>}
               {quick.details.length > 0 && (
                 <>
-                  <p className="details-title">Detalles</p>
+                  <p className="details-title">{t.details}</p>
                   <ul className="details">
                     {quick.details.map((d) => (
                       <li key={d}>{d}</li>
@@ -307,22 +322,22 @@ export default function Shop({
                   </ul>
                 </>
               )}
-              {wholesale && <p className="fine left">Mínimo {WHOLESALE_MIN_UNITS} unidades por referencia.</p>}
+              {wholesale && <p className="fine left">{fmt(t.minUnits, { units: WHOLESALE_MIN_UNITS })}</p>}
               {!wholesale && (
                 <p className="fine left">
-                  Envío gratis desde {formatPrice(FREE_SHIPPING_FROM)} · Cerramos el pedido por WhatsApp.
+                  {fmt(t.freeShippingFrom, { amount: formatPrice(FREE_SHIPPING_FROM) })}
                 </p>
               )}
               <div className="modal-buy">
                 <div className="qty">
                   <button
                     onClick={() => setQuickQty((q) => Math.max(wholesale ? WHOLESALE_MIN_UNITS : 1, q - 1))}
-                    aria-label="Quitar una unidad"
+                    aria-label={t.removeOne}
                   >
                     −
                   </button>
                   <span aria-live="polite">{quickQty}</span>
-                  <button onClick={() => setQuickQty((q) => Math.min(MAX_QTY, q + 1))} aria-label="Añadir una unidad" disabled={quickQty >= MAX_QTY}>
+                  <button onClick={() => setQuickQty((q) => Math.min(MAX_QTY, q + 1))} aria-label={t.addOne} disabled={quickQty >= MAX_QTY}>
                     +
                   </button>
                 </div>
@@ -333,7 +348,7 @@ export default function Shop({
                     setQuick(null);
                   }}
                 >
-                  Añadir a la bolsa · {formatPrice(priceOf(quick.id) * quickQty)}
+                  {fmt(t.addToBagPrice, { price: formatPrice(priceOf(quick.id) * quickQty) })}
                 </button>
               </div>
             </div>
@@ -343,10 +358,10 @@ export default function Shop({
 
       {/* Carrito */}
       <div className={cartOpen ? "overlay side show" : "overlay side"} onClick={() => setCartOpen(false)} aria-hidden={!cartOpen}>
-        <aside className="drawer" role="dialog" aria-modal="true" aria-label="Bolsa de compra" onClick={(e) => e.stopPropagation()}>
+        <aside className="drawer" role="dialog" aria-modal="true" aria-label={t.bagAria} onClick={(e) => e.stopPropagation()}>
           <div className="drawer-head">
-            <h2>Tu bolsa <span>({count})</span></h2>
-            <button className="close static" onClick={() => setCartOpen(false)} aria-label="Cerrar bolsa">
+            <h2>{t.bagTitle} <span>({count})</span></h2>
+            <button className="close static" onClick={() => setCartOpen(false)} aria-label={t.closeBag}>
               ✕
             </button>
           </div>
@@ -354,9 +369,9 @@ export default function Shop({
           {lines.length === 0 ? (
             <div className="drawer-empty">
               <p className="spark">✳</p>
-              <p>Tu bolsa está vacía.</p>
+              <p>{t.bagEmpty}</p>
               <button className="btn-ghost" onClick={() => setCartOpen(false)}>
-                Seguir mirando
+                {t.keepLooking}
               </button>
             </div>
           ) : (
@@ -365,10 +380,10 @@ export default function Shop({
                 <p>
                   {remaining > 0 ? (
                     <>
-                      Te faltan <strong>{formatPrice(remaining)}</strong> para el envío gratis
+                      {t.shipLeftBefore}<strong>{formatPrice(remaining)}</strong>{t.shipLeftAfter}
                     </>
                   ) : (
-                    <strong>¡Tienes envío gratis! ✳</strong>
+                    <strong>{t.shipFree}</strong>
                   )}
                 </p>
                 <div className="bar">
@@ -386,16 +401,16 @@ export default function Shop({
                       </div>
                       <div className="line-info">
                         <p className="line-name">{p.name}</p>
-                        <p className="line-meta">{wholesale && l.qty < WHOLESALE_MIN_UNITS && <strong className="warn">Mínimo {WHOLESALE_MIN_UNITS} uds</strong>}</p>
+                        <p className="line-meta">{wholesale && l.qty < WHOLESALE_MIN_UNITS && <strong className="warn">{fmt(t.minUnitsShort, { units: WHOLESALE_MIN_UNITS })}</strong>}</p>
                         <div className="qty">
-                          <button onClick={() => changeQty(l.id, -1)} aria-label="Quitar una unidad">−</button>
+                          <button onClick={() => changeQty(l.id, -1)} aria-label={t.removeOne}>−</button>
                           <span aria-live="polite">{l.qty}</span>
-                          <button onClick={() => changeQty(l.id, 1)} aria-label="Añadir una unidad" disabled={l.qty >= MAX_QTY}>+</button>
+                          <button onClick={() => changeQty(l.id, 1)} aria-label={t.addOne} disabled={l.qty >= MAX_QTY}>+</button>
                         </div>
                       </div>
                       <div className="line-end">
                         <p className="price">{formatPrice(priceOf(p.id) * l.qty)}</p>
-                        <button className="link" onClick={() => remove(l.id)}>Eliminar</button>
+                        <button className="link" onClick={() => remove(l.id)}>{t.remove}</button>
                       </div>
                     </li>
                   );
@@ -403,13 +418,13 @@ export default function Shop({
               </ul>
 
               <div className="totals">
-                <p><span>Subtotal</span><span>{formatPrice(subtotal)}</span></p>
-                <p><span>Envío</span><span>{wholesale ? "A convenir" : shipping === 0 ? "Gratis" : formatPrice(shipping)}</span></p>
-                <p className="grand"><span>Total</span><span>{formatPrice(total)}</span></p>
+                <p><span>{t.subtotal}</span><span>{formatPrice(subtotal)}</span></p>
+                <p><span>{t.shipping}</span><span>{wholesale ? t.toBeAgreed : shipping === 0 ? t.free : formatPrice(shipping)}</span></p>
+                <p className="grand"><span>{t.total}</span><span>{formatPrice(total)}</span></p>
                 {belowOrder && lines.length > 0 && (
-                  <p className="warn-box">Pedido mínimo {formatPrice(WHOLESALE_MIN_ORDER)}: te faltan {formatPrice(WHOLESALE_MIN_ORDER - subtotal)}.</p>
+                  <p className="warn-box">{fmt(t.minOrder, { min: formatPrice(WHOLESALE_MIN_ORDER), rest: formatPrice(WHOLESALE_MIN_ORDER - subtotal) })}</p>
                 )}
-                {belowUnits.length > 0 && <p className="warn-box">Cada referencia necesita al menos {WHOLESALE_MIN_UNITS} unidades.</p>}
+                {belowUnits.length > 0 && <p className="warn-box">{fmt(t.minUnitsEach, { units: WHOLESALE_MIN_UNITS })}</p>}
                 <button
                   className="btn-primary"
                   disabled={!canCheckout}
@@ -418,7 +433,7 @@ export default function Shop({
                     setCheckout(true);
                   }}
                 >
-                  Finalizar pedido →
+                  {t.checkoutBtn}
                 </button>
               </div>
             </>
@@ -428,6 +443,8 @@ export default function Shop({
 
       {checkout && (
         <CheckoutModal
+          t={t}
+          formatPrice={formatPrice}
           lines={lines}
           total={total}
           shipping={shipping}
@@ -445,7 +462,7 @@ export default function Shop({
       {toast && !cartOpen && (
         <div className="toast" role="status">
           ✳ {toast}
-          <button onClick={() => { setToast(null); setCartOpen(true); }}>Ver bolsa</button>
+          <button onClick={() => { setToast(null); setCartOpen(true); }}>{t.viewBag}</button>
         </div>
       )}
     </div>
@@ -453,6 +470,8 @@ export default function Shop({
 }
 
 function CheckoutModal({
+  t,
+  formatPrice,
   lines,
   total,
   shipping,
@@ -462,6 +481,8 @@ function CheckoutModal({
   onClose,
   onDone,
 }: {
+  t: Dict["shop"];
+  formatPrice: (n: number) => string;
   lines: CartLine[];
   total: number;
   shipping: number;
@@ -482,7 +503,7 @@ function CheckoutModal({
     cp: "",
     city: "",
     region: "",
-    country: "España",
+    country: t.defaultCountry,
     notes: "",
   });
   const [delivery, setDelivery] = useState<"envio" | "retiro">("envio");
@@ -494,7 +515,7 @@ function CheckoutModal({
   const ship = delivery === "envio" ? shipping : 0;
   const finalTotal = subtotal + ship;
   const shipLabel =
-    delivery === "retiro" ? "retiro en tienda" : wholesale ? "a convenir" : ship === 0 ? "gratis" : formatPrice(ship);
+    delivery === "retiro" ? t.shipPickup : wholesale ? t.shipTbd : ship === 0 ? t.shipFreeLower : formatPrice(ship);
 
   const valid =
     f.nombre.trim() &&
@@ -505,30 +526,30 @@ function CheckoutModal({
 
   const buildSummary = () =>
     [
-      wholesale ? "Hola La Gruta! Quiero hacer este PEDIDO MAYORISTA:" : "Hola La Gruta! Quiero hacer este pedido:",
+      wholesale ? t.wa.helloWholesale : t.wa.helloRetail,
       "",
       ...lines.map((l) => {
         const p = byId(l.id)!;
         return `• ${l.qty} × ${p.name} — ${formatPrice(priceOf(p.id) * l.qty)}`;
       }),
       "",
-      `Subtotal: ${formatPrice(subtotal)}`,
-      `Envío: ${shipLabel}`,
-      `Total: ${formatPrice(finalTotal)}`,
+      `${t.wa.subtotal}: ${formatPrice(subtotal)}`,
+      `${t.wa.shipping}: ${shipLabel}`,
+      `${t.wa.total}: ${formatPrice(finalTotal)}`,
       "",
-      `Nombre y apellido: ${f.nombre.trim()} ${f.apellido.trim()}`,
-      ...(wholesale ? [`Empresa/tienda: ${f.empresa.trim()}`, `NIF/CIF: ${f.nif.trim()}`] : []),
-      `Contacto: ${f.contacto.trim()}`,
+      `${t.wa.name}: ${f.nombre.trim()} ${f.apellido.trim()}`,
+      ...(wholesale ? [`${t.wa.company}: ${f.empresa.trim()}`, `${t.wa.taxId}: ${f.nif.trim()}`] : []),
+      `${t.wa.contact}: ${f.contacto.trim()}`,
       "",
       delivery === "retiro"
-        ? "Entrega: RETIRO EN TIENDA"
+        ? t.wa.pickup
         : [
-            "Entrega: ENVÍO A DOMICILIO",
-            `Dirección: ${f.street.trim()}${f.extra.trim() ? `, ${f.extra.trim()}` : ""}`,
-            `CP: ${f.cp.trim()} · ${f.city.trim()}${f.region.trim() ? ` (${f.region.trim()})` : ""}`,
-            `País: ${f.country.trim()}`,
+            t.wa.homeDelivery,
+            `${t.wa.address}: ${f.street.trim()}${f.extra.trim() ? `, ${f.extra.trim()}` : ""}`,
+            `${t.wa.postcode}: ${f.cp.trim()} · ${f.city.trim()}${f.region.trim() ? ` (${f.region.trim()})` : ""}`,
+            `${t.wa.country}: ${f.country.trim()}`,
           ].join("\n"),
-      ...(f.notes.trim() ? ["", `Notas: ${f.notes.trim()}`] : []),
+      ...(f.notes.trim() ? ["", `${t.wa.notes}: ${f.notes.trim()}`] : []),
     ].join("\n");
 
   // Tras enviar el formulario se avisa y se redirige a WhatsApp.
@@ -546,23 +567,22 @@ function CheckoutModal({
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="modal checkout" role="dialog" aria-modal="true" aria-label="Finalizar pedido" onClick={(e) => e.stopPropagation()}>
-        <button className="close" onClick={onClose} aria-label="Cerrar">✕</button>
+      <div className="modal checkout" role="dialog" aria-modal="true" aria-label={t.checkoutAria} onClick={(e) => e.stopPropagation()}>
+        <button className="close" onClick={onClose} aria-label={t.close}>✕</button>
         {link ? (
           <div className="done">
             <p className="spark">✳</p>
-            <h2>¡Gracias por tu pedido!</h2>
+            <h2>{t.thanks}</h2>
             <p>
-              Te estamos <strong>redirigiendo a WhatsApp</strong> para cerrar el pedido con nosotras. El mensaje ya va
-              escrito: solo tienes que enviarlo.
+              {t.redirectPre}<strong>{t.redirectStrong}</strong>{t.redirectPost}
             </p>
-            <a className="btn-primary" href={link} style={{ textAlign: "center" }}>Abrir WhatsApp ahora</a>
-            <button className="btn-ghost" onClick={onDone}>Vaciar bolsa y cerrar</button>
+            <a className="btn-primary" href={link} style={{ textAlign: "center" }}>{t.openWhatsapp}</a>
+            <button className="btn-ghost" onClick={onDone}>{t.emptyAndClose}</button>
           </div>
         ) : (
           <form onSubmit={submit} className="checkout-form">
-            <p className="eyebrow">ÚLTIMO PASO</p>
-            <h2>Finalizar pedido</h2>
+            <p className="eyebrow">{t.lastStep}</p>
+            <h2>{t.checkoutTitle}</h2>
             <ul className="mini">
               {lines.map((l) => {
                 const p = byId(l.id)!;
@@ -573,52 +593,52 @@ function CheckoutModal({
                   </li>
                 );
               })}
-              <li className="mini-total"><span>Total (envío: {shipLabel})</span><span>{formatPrice(finalTotal)}</span></li>
+              <li className="mini-total"><span>{fmt(t.totalShipping, { ship: shipLabel })}</span><span>{formatPrice(finalTotal)}</span></li>
             </ul>
 
             <div className="row2">
-              <label>Nombre<input value={f.nombre} onChange={set("nombre")} required autoComplete="given-name" /></label>
-              <label>Apellido<input value={f.apellido} onChange={set("apellido")} required autoComplete="family-name" /></label>
+              <label>{t.firstName}<input value={f.nombre} onChange={set("nombre")} required autoComplete="given-name" /></label>
+              <label>{t.lastName}<input value={f.apellido} onChange={set("apellido")} required autoComplete="family-name" /></label>
             </div>
             {wholesale && (
               <div className="row2">
-                <label>Empresa / tienda<input value={f.empresa} onChange={set("empresa")} required autoComplete="organization" /></label>
-                <label>NIF / CIF<input value={f.nif} onChange={set("nif")} required /></label>
+                <label>{t.company}<input value={f.empresa} onChange={set("empresa")} required autoComplete="organization" /></label>
+                <label>{t.taxId}<input value={f.nif} onChange={set("nif")} required /></label>
               </div>
             )}
-            <label>Email o teléfono<input value={f.contacto} onChange={set("contacto")} required autoComplete="email" /></label>
+            <label>{t.contact}<input value={f.contacto} onChange={set("contacto")} required autoComplete="email" /></label>
 
             <fieldset className="delivery">
-              <legend>¿Cómo lo quieres recibir?</legend>
+              <legend>{t.deliveryLegend}</legend>
               <label className={delivery === "envio" ? "opt on" : "opt"}>
                 <input type="radio" name="delivery" checked={delivery === "envio"} onChange={() => setDelivery("envio")} />
-                <span><strong>Envío a domicilio</strong></span>
+                <span><strong>{t.homeDelivery}</strong></span>
               </label>
               <label className={delivery === "retiro" ? "opt on" : "opt"}>
                 <input type="radio" name="delivery" checked={delivery === "retiro"} onChange={() => setDelivery("retiro")} />
-                <span><strong>Retiro en tienda</strong><small>Te confirmamos dirección y horario por WhatsApp</small></span>
+                <span><strong>{t.pickup}</strong><small>{t.pickupNote}</small></span>
               </label>
             </fieldset>
 
             {delivery === "envio" && (
               <>
-                <label>Calle y número<input value={f.street} onChange={set("street")} required autoComplete="address-line1" /></label>
-                <label>Piso, puerta, escalera (opcional)<input value={f.extra} onChange={set("extra")} autoComplete="address-line2" /></label>
+                <label>{t.street}<input value={f.street} onChange={set("street")} required autoComplete="address-line1" /></label>
+                <label>{t.extra}<input value={f.extra} onChange={set("extra")} autoComplete="address-line2" /></label>
                 <div className="row2">
-                  <label>Código postal<input value={f.cp} onChange={set("cp")} required autoComplete="postal-code" inputMode="text" /></label>
-                  <label>Ciudad<input value={f.city} onChange={set("city")} required autoComplete="address-level2" /></label>
+                  <label>{t.postcode}<input value={f.cp} onChange={set("cp")} required autoComplete="postal-code" inputMode="text" /></label>
+                  <label>{t.city}<input value={f.city} onChange={set("city")} required autoComplete="address-level2" /></label>
                 </div>
                 <div className="row2">
-                  <label>Provincia / estado<input value={f.region} onChange={set("region")} autoComplete="address-level1" /></label>
-                  <label>País<input value={f.country} onChange={set("country")} required autoComplete="country-name" /></label>
+                  <label>{t.region}<input value={f.region} onChange={set("region")} autoComplete="address-level1" /></label>
+                  <label>{t.country}<input value={f.country} onChange={set("country")} required autoComplete="country-name" /></label>
                 </div>
               </>
             )}
 
-            <label>Notas (opcional)<textarea rows={2} value={f.notes} onChange={set("notes")} /></label>
+            <label>{t.notes}<textarea rows={2} value={f.notes} onChange={set("notes")} /></label>
 
-            <button className="btn-primary" type="submit" disabled={!valid}>Hacer pedido y continuar por WhatsApp</button>
-            <p className="fine">Al enviar te redirigimos a WhatsApp para cerrar el pedido. No se cobra nada ahora.</p>
+            <button className="btn-primary" type="submit" disabled={!valid}>{t.submit}</button>
+            <p className="fine">{t.fine}</p>
           </form>
         )}
       </div>

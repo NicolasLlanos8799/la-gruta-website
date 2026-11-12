@@ -102,3 +102,11 @@ footer{padding:42px 8vw 28px;display:flex;align-items:end;justify-content:space-
   .hero-reference .hero-copy{position:relative;z-index:3}
   .hero-reference .hero-wholesale{background:#fff4e7;padding:2px 6px;margin-left:-6px}
 }
+
+/* Selector de idioma */
+.lang-switch{display:flex;align-items:center;gap:2px;font:700 12px/1 Arial,sans-serif;letter-spacing:.08em}
+.lang-switch a{display:block;padding:7px 8px;border-radius:30px;color:#101010;opacity:.65;transition:opacity .15s,background .15s}
+.lang-switch a:hover{opacity:1}
+.lang-switch a.on{background:#073d32;color:#fff;opacity:1}
+.header-tools{gap:clamp(14px,2vw,28px)}
+@media(max-width:650px){.lang-switch{font-size:11px}.lang-switch a{padding:6px 6px}.header-tools{gap:10px}}
