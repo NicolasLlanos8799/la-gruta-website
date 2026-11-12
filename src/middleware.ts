@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALES, isLocale, type Locale } from "@/i18n/config";
+import { LOCALE_COOKIE, isLocale, type Locale } from "@/i18n/config";
 
-/** Elige idioma: cookie (elección previa) > Accept-Language > castellano. */
+/** Elige idioma: cookie (elección manual previa) > idioma principal del dispositivo.
+ *  Cualquier variante de español → es, catalán → ca, cualquier otro idioma → inglés. */
 function pickLocale(req: NextRequest): Locale {
   const saved = req.cookies.get(LOCALE_COOKIE)?.value;
   if (isLocale(saved)) return saved;
@@ -12,9 +13,12 @@ function pickLocale(req: NextRequest): Locale {
       const [tag, q] = part.trim().split(";q=");
       return { code: tag.toLowerCase().split("-")[0], q: q ? parseFloat(q) : 1 };
     })
+    .filter((l) => l.code && l.code !== "*")
     .sort((a, b) => b.q - a.q);
-  for (const { code } of ranked) if ((LOCALES as readonly string[]).includes(code)) return code as Locale;
-  return DEFAULT_LOCALE;
+  const primary = ranked[0]?.code;
+  if (primary === "es") return "es";
+  if (primary === "ca") return "ca";
+  return "en";
 }
 
 export function middleware(req: NextRequest) {

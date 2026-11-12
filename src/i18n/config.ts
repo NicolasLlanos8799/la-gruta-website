@@ -1,6 +1,6 @@
 export const LOCALES = ["es", "ca", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
-export const DEFAULT_LOCALE: Locale = "es";
+export const DEFAULT_LOCALE: Locale = "en";
 export const LOCALE_COOKIE = "NEXT_LOCALE";
 
 export const LOCALE_LABELS: Record<Locale, { short: string; name: string; intl: string; og: string }> = {
