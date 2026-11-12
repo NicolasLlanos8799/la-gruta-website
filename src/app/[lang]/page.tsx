@@ -5,6 +5,7 @@ import HeroScroll from "@/components/HeroScroll";
 import LangSwitch from "@/components/LangSwitch";
 import { LOCALES, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
+import { PRIVACY_READY, privacy } from "@/i18n/privacy";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -64,6 +65,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <div className="visit-info"><strong>LG<span>✳</span></strong><p>{t.visitCity}</p><p>{t.visitAddress}</p><a className="button light" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">{t.visitButton}</a></div>
     </section>
 
-    <footer><div><a className="brand" href="#top">la gruta<span>✳</span></a><p>{t.footerTagline}</p></div><a className="footer-social" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">@lagrutabcn ↗</a><small>© LA GRUTA 2026</small></footer>
+    <footer><div><a className="brand" href="#top">la gruta<span>✳</span></a><p>{t.footerTagline}</p></div><a className="footer-social" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">@lagrutabcn ↗</a><small>© LA GRUTA 2026{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small></footer>
   </main>;
 }

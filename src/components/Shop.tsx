@@ -6,6 +6,7 @@ import AutoRefresh from "./AutoRefresh";
 import LangSwitch from "./LangSwitch";
 import { LOCALE_LABELS, fmt, type Locale } from "@/i18n/config";
 import { getDictionary, type Dict } from "@/i18n/dictionaries";
+import { PRIVACY_READY, privacy } from "@/i18n/privacy";
 import ProductImage from "./ProductImage";
 import {
   FREE_SHIPPING_FROM,
@@ -290,7 +291,7 @@ export default function Shop({
             WhatsApp ↗
           </a>
         </p>
-        <small>{t.footerSmall}</small>
+        <small>{t.footerSmall}{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
       </footer>
 
       {/* Vista de producto (pop-up) */}

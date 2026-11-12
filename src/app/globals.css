@@ -110,3 +110,12 @@ footer{padding:42px 8vw 28px;display:flex;align-items:end;justify-content:space-
 .lang-switch a.on{background:#073d32;color:#fff;opacity:1}
 .header-tools{gap:clamp(14px,2vw,28px)}
 @media(max-width:650px){.lang-switch{font-size:11px}.lang-switch a{padding:6px 6px}.header-tools{gap:10px}}
+
+/* Páginas legales */
+.legal{max-width:760px;margin:0 auto;padding:56px 6vw 90px;font-size:16px;line-height:1.7;color:#17231f}
+.legal h1{font:400 clamp(40px,6vw,64px)/1 Georgia,serif;letter-spacing:-.05em;margin:0 0 8px;color:var(--ink)}
+.legal h2{font:400 26px/1.2 Georgia,serif;margin:42px 0 12px;color:var(--ink)}
+.legal ul{padding-left:22px;margin:12px 0}.legal li{margin:6px 0}
+.legal blockquote{margin:16px 0;padding:14px 18px;background:#fff;border-left:4px solid var(--yellow);border-radius:4px}
+.legal-updated{font-size:13px;opacity:.7;margin:0 0 28px}
+.legal-draft{background:var(--yellow);padding:12px 16px;border-radius:6px;font-size:14px;font-weight:700}
