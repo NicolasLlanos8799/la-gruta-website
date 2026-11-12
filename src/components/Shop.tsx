@@ -51,6 +51,7 @@ export default function Shop({
   const [cart, setCart] = useState<CartLine[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [quick, setQuick] = useState<Product | null>(null);
+  const [quickQty, setQuickQty] = useState(1);
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -125,12 +126,13 @@ export default function Shop({
   const belowOrder = wholesale && subtotal < WHOLESALE_MIN_ORDER;
   const canCheckout = lines.length > 0 && belowUnits.length === 0 && !belowOrder;
 
-  const add = useCallback((p: Product) => {
+  const add = useCallback((p: Product, qty?: number) => {
+    const n = qty ?? (wholesale ? WHOLESALE_MIN_UNITS : 1);
     setCart((prev) => {
       const i = prev.findIndex((l) => l.id === p.id);
-      if (i === -1) return [...prev, { id: p.id, qty: wholesale ? WHOLESALE_MIN_UNITS : 1 }];
+      if (i === -1) return [...prev, { id: p.id, qty: Math.min(MAX_QTY, n) }];
       const next = [...prev];
-      next[i] = { ...next[i], qty: Math.min(MAX_QTY, next[i].qty + 1) };
+      next[i] = { ...next[i], qty: Math.min(MAX_QTY, next[i].qty + (qty ?? 1)) };
       return next;
     });
     setToast(`${p.name} añadido a la bolsa`);
@@ -144,7 +146,10 @@ export default function Shop({
     );
   const remove = (id: string) => setCart((prev) => prev.filter((l) => l.id !== id));
 
-  const openQuick = (p: Product) => setQuick(p);
+  const openQuick = (p: Product) => {
+    setQuickQty(wholesale ? WHOLESALE_MIN_UNITS : 1);
+    setQuick(p);
+  };
 
 
   return (
@@ -248,10 +253,10 @@ export default function Shop({
                   {p.badge && <span className="badge">{p.badge}</span>}
                 </button>
                 <div className="card-info">
-                  <div>
+                  <button className="card-title" onClick={() => openQuick(p)}>
                     <h3>{p.name}</h3>
                     <p className="cat">{p.category}</p>
-                  </div>
+                  </button>
                   <p className="price">{formatPrice(priceOf(p.id))}</p>
                 </div>
                 <button className="btn-add" onClick={() => add(p)}>
@@ -273,35 +278,64 @@ export default function Shop({
         <small>© LA GRUTA 2026 · Moda y arte · Barcelona</small>
       </footer>
 
-      {/* Vista rápida */}
+      {/* Vista de producto (pop-up) */}
       {quick && (
         <div className="overlay" onClick={() => setQuick(null)}>
-          <div className="modal" role="dialog" aria-modal="true" aria-label={quick.name} onClick={(e) => e.stopPropagation()}>
+          <div className="modal product-modal" role="dialog" aria-modal="true" aria-label={quick.name} onClick={(e) => e.stopPropagation()}>
             <button className="close" onClick={() => setQuick(null)} aria-label="Cerrar">
               ✕
             </button>
             <div className="modal-media">
               <ProductImage product={quick} />
+              {quick.badge && <span className="badge">{quick.badge}</span>}
             </div>
             <div className="modal-body">
               <p className="eyebrow">{quick.category.toUpperCase()}</p>
               <h2>{quick.name}</h2>
-              <p className="price big">{formatPrice(priceOf(quick.id))}</p>
-              <p className="desc">{quick.description}</p>
-              <ul className="details">
-                {quick.details.map((d) => (
-                  <li key={d}>{d}</li>
-                ))}
-              </ul>
-              <button
-                className="btn-primary"
-                onClick={() => {
-                  add(quick);
-                  setQuick(null);
-                }}
-              >
-                Añadir a la bolsa
-              </button>
+              <p className="price big">
+                {formatPrice(priceOf(quick.id))}
+                {wholesale && <small> / ud · mayorista</small>}
+              </p>
+              {quick.description && <p className="desc">{quick.description}</p>}
+              {quick.details.length > 0 && (
+                <>
+                  <p className="details-title">Detalles</p>
+                  <ul className="details">
+                    {quick.details.map((d) => (
+                      <li key={d}>{d}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {wholesale && <p className="fine left">Mínimo {WHOLESALE_MIN_UNITS} unidades por referencia.</p>}
+              {!wholesale && (
+                <p className="fine left">
+                  Envío gratis desde {formatPrice(FREE_SHIPPING_FROM)} · Cerramos el pedido por WhatsApp.
+                </p>
+              )}
+              <div className="modal-buy">
+                <div className="qty">
+                  <button
+                    onClick={() => setQuickQty((q) => Math.max(wholesale ? WHOLESALE_MIN_UNITS : 1, q - 1))}
+                    aria-label="Quitar una unidad"
+                  >
+                    −
+                  </button>
+                  <span aria-live="polite">{quickQty}</span>
+                  <button onClick={() => setQuickQty((q) => Math.min(MAX_QTY, q + 1))} aria-label="Añadir una unidad" disabled={quickQty >= MAX_QTY}>
+                    +
+                  </button>
+                </div>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    add(quick, quickQty);
+                    setQuick(null);
+                  }}
+                >
+                  Añadir a la bolsa · {formatPrice(priceOf(quick.id) * quickQty)}
+                </button>
+              </div>
             </div>
           </div>
         </div>
