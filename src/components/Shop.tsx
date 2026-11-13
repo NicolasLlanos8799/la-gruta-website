@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
-import { lockWholesale, unlockWholesale } from "@/app/tienda/actions";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AutoRefresh from "./AutoRefresh";
 import LangSwitch from "./LangSwitch";
 import { LOCALE_LABELS, fmt, type Locale } from "@/i18n/config";
@@ -13,8 +11,7 @@ import ProductImage from "./ProductImage";
 import {
   FREE_SHIPPING_FROM,
   SHIPPING_COST,
-  WHOLESALE_MIN_ORDER,
-  WHOLESALE_MIN_UNITS,
+  WHOLESALE_MIN_ITEMS,
   whatsappLink,
   formatPrice as formatPriceIntl,
   type Product,
@@ -29,41 +26,27 @@ const MAX_QTY = 9;
 
 export default function Shop({
   lang,
-  mode = "retail",
   products: all,
   categories: categoryOrder,
-  canUnlock = false,
 }: {
-<<<<<<< HEAD
   lang: Locale;
-=======
-  canUnlock?: boolean;
->>>>>>> 6e05253 (Implement wholesale access and pricing logic; enhance location section and footer styling)
-  mode?: "retail" | "wholesale";
   products: Product[];
   categories: string[];
 }) {
-  const wholesale = mode === "wholesale";
   const d = getDictionary(lang);
   const t = d.shop;
   const base = `/${lang}`;
   const intl = LOCALE_LABELS[lang].intl;
   const formatPrice = useCallback((n: number) => formatPriceIntl(n, intl), [intl]);
-  // La tienda mayorista solo muestra productos con precio mayorista.
-  const PRODUCTS = useMemo(() => (wholesale ? all.filter((p) => p.wholesalePrice !== null) : all), [all, wholesale]);
+  const PRODUCTS = all;
   const byId = useCallback((id: string) => PRODUCTS.find((p) => p.id === id), [PRODUCTS]);
   const CATEGORIES = useMemo(
     () => [ALL, ...categoryOrder.filter((c) => PRODUCTS.some((p) => p.category === c))],
     [PRODUCTS, categoryOrder],
   );
-  const STORAGE_KEY = `${STORAGE_PREFIX}-${mode}`;
-  const priceOf = useCallback(
-    (id: string) => {
-      const p = byId(id);
-      return p ? (wholesale ? (p.wholesalePrice ?? 0) : p.price) : 0;
-    },
-    [wholesale, byId],
-  );
+  const STORAGE_KEY = `${STORAGE_PREFIX}-retail`;
+  // El precio mayorista no se publica: con 15+ prendas se acuerda por WhatsApp.
+  const priceOf = useCallback((id: string) => byId(id)?.price ?? 0, [byId]);
   const [category, setCategory] = useState<string>(ALL);
   const [sort, setSort] = useState<Sort>("destacados");
   const [query, setQuery] = useState("");
@@ -74,29 +57,6 @@ export default function Shop({
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const router = useRouter();
-  const [unlockOpen, setUnlockOpen] = useState(false);
-  const [code, setCode] = useState("");
-  const [codeError, setCodeError] = useState(false);
-  const [pending, startTransition] = useTransition();
-
-  const submitCode = (e: React.FormEvent) => {
-    e.preventDefault();
-    startTransition(async () => {
-      const r = await unlockWholesale(code);
-      if (r.ok) {
-        setUnlockOpen(false);
-        setCode("");
-        setCodeError(false);
-        router.refresh();
-      } else setCodeError(true);
-    });
-  };
-  const exitWholesale = () =>
-    startTransition(async () => {
-      await lockWholesale();
-      router.refresh();
-    });
 
   // Cargar / guardar carrito
   useEffect(() => {
@@ -117,7 +77,7 @@ export default function Shop({
   }, [cart, loaded]);
 
   // Bloquear scroll con paneles abiertos + cerrar con Escape
-  const anyOpen = cartOpen || checkout || !!quick || unlockOpen;
+  const anyOpen = cartOpen || checkout || !!quick;
   useEffect(() => {
     document.body.style.overflow = anyOpen ? "hidden" : "";
     return () => {
@@ -127,14 +87,13 @@ export default function Shop({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (unlockOpen) setUnlockOpen(false);
-      else if (checkout) setCheckout(false);
+      if (checkout) setCheckout(false);
       else if (quick) setQuick(null);
       else if (cartOpen) setCartOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [checkout, quick, cartOpen, unlockOpen]);
+  }, [checkout, quick, cartOpen]);
 
   useEffect(() => {
     if (!toast) return;
@@ -161,16 +120,16 @@ export default function Shop({
   }, [loaded, lines, cart.length]);
 
   const count = lines.reduce((n, l) => n + l.qty, 0);
+  const wholesale = count >= WHOLESALE_MIN_ITEMS;
+  const itemsLeft = Math.max(0, WHOLESALE_MIN_ITEMS - count);
   const subtotal = lines.reduce((s, l) => s + priceOf(l.id) * l.qty, 0);
   const shipping = wholesale || subtotal === 0 || subtotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
   const total = subtotal + shipping;
   const remaining = Math.max(0, FREE_SHIPPING_FROM - subtotal);
-  const belowUnits = wholesale ? lines.filter((l) => l.qty < WHOLESALE_MIN_UNITS) : [];
-  const belowOrder = wholesale && subtotal < WHOLESALE_MIN_ORDER;
-  const canCheckout = lines.length > 0 && belowUnits.length === 0 && !belowOrder;
+  const canCheckout = lines.length > 0;
 
   const add = useCallback((p: Product, qty?: number) => {
-    const n = qty ?? (wholesale ? WHOLESALE_MIN_UNITS : 1);
+    const n = qty ?? 1;
     setCart((prev) => {
       const i = prev.findIndex((l) => l.id === p.id);
       if (i === -1) return [...prev, { id: p.id, qty: Math.min(MAX_QTY, n) }];
@@ -179,7 +138,7 @@ export default function Shop({
       return next;
     });
     setToast(fmt(t.toastAdded, { name: p.name }));
-  }, [wholesale, t]);
+  }, [t]);
 
   const changeQty = (id: string, delta: number) =>
     setCart((prev) =>
@@ -190,7 +149,7 @@ export default function Shop({
   const remove = (id: string) => setCart((prev) => prev.filter((l) => l.id !== id));
 
   const openQuick = (p: Product) => {
-    setQuickQty(wholesale ? WHOLESALE_MIN_UNITS : 1);
+    setQuickQty(1);
     setQuick(p);
   };
 
@@ -203,16 +162,10 @@ export default function Shop({
           <img className="gruta-logo" src="/images/la-gruta-logo.png" alt={d.common.logoAlt} />
         </Link>
         <nav>
-<<<<<<< HEAD
           <Link href={`${base}#coleccion`}>{t.navCollections}</Link>
           <Link href={`${base}#historia`}>{t.navAbout}</Link>
-          <Link href={`${base}/tienda`} aria-current={!wholesale ? "page" : undefined}>{t.navRetail}</Link>
-          <Link href={`${base}/mayorista`} aria-current={wholesale ? "page" : undefined}>{t.navWholesale}</Link>
-=======
-          <Link href="/#coleccion">Colecciones</Link>
-          <Link href="/#historia">Sobre La Gruta</Link>
-          <Link href="/tienda" aria-current="page">Tienda</Link>
->>>>>>> 6e05253 (Implement wholesale access and pricing logic; enhance location section and footer styling)
+          <Link href={`${base}/tienda`} aria-current="page">{t.navRetail}</Link>
+          <Link href={`${base}/tienda#mayorista`}>{t.navWholesale}</Link>
         </nav>
         <div className="header-tools" aria-label={t.tools}>
           <LangSwitch lang={lang} label={d.common.language} />
@@ -224,54 +177,26 @@ export default function Shop({
       </header>
 
       <section className="shop-hero">
-        <p className="eyebrow">{wholesale ? t.heroEyebrowWholesale : t.heroEyebrowRetail}</p>
+        <p className="eyebrow">{t.heroEyebrowRetail}</p>
         <h1>
           {(() => {
-            const [a, b, em] = wholesale ? t.heroWholesale : t.heroRetail;
+            const [a, b, em] = t.heroRetail;
             return (<>{a}<br />{b}<em>{em}</em></>);
           })()}
         </h1>
-        <p>
-          {wholesale
-            ? fmt(t.heroTextWholesale, { units: WHOLESALE_MIN_UNITS, amount: formatPrice(WHOLESALE_MIN_ORDER) })
-            : t.heroTextRetail}
-        </p>
+        <p>{t.heroTextRetail}</p>
       </section>
 
-<<<<<<< HEAD
-      <div className="store-switch" role="tablist" aria-label={t.switchLabel}>
-        <Link href={`${base}/tienda`} role="tab" aria-selected={!wholesale} className={!wholesale ? "on" : ""}>
-          <strong>{t.retailTitle}</strong>
-          <span>{t.retailSub}</span>
-        </Link>
-        <Link href={`${base}/mayorista`} role="tab" aria-selected={wholesale} className={wholesale ? "on" : ""}>
-          <strong>{t.wholesaleTitle}</strong>
-          <span>{fmt(t.wholesaleSub, { units: WHOLESALE_MIN_UNITS })}</span>
-        </Link>
-      </div>
-=======
-      {wholesale ? (
-        <div className="b2b-band static">
-          <span>
-            <strong>Modo mayorista activo</strong> · precios para tiendas
-          </span>
-          <button className="btn-ghost light" onClick={exitWholesale} disabled={pending}>
-            Salir
-          </button>
+      <aside id="mayorista" className={wholesale ? "wholesale-promo on" : "wholesale-promo"}>
+        <span className="wholesale-star" aria-hidden="true">✳</span>
+        <div>
+          <strong>{t.wholesaleBandTitle}</strong>
+          <p>{fmt(t.wholesaleBandText, { n: WHOLESALE_MIN_ITEMS })}</p>
         </div>
-      ) : (
-        canUnlock && (
-          <div className="b2b-band static">
-            <span>
-              <strong>¿Tienes una tienda?</strong> Accede con tu código a los precios mayoristas.
-            </span>
-            <button className="btn-ghost light" onClick={() => setUnlockOpen(true)}>
-              Acceso tiendas
-            </button>
-          </div>
-        )
-      )}
->>>>>>> 6e05253 (Implement wholesale access and pricing logic; enhance location section and footer styling)
+        <button className="btn-ghost light" onClick={() => setCartOpen(true)}>
+          {t.bagTitle} ({count}/{WHOLESALE_MIN_ITEMS})
+        </button>
+      </aside>
 
       <section className="shop-toolbar" aria-label={t.filters}>
         <div className="chips" role="tablist" aria-label={t.categories}>
@@ -355,32 +280,6 @@ export default function Shop({
         <small>{t.footerSmall}{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
       </footer>
 
-      {unlockOpen && (
-        <div className="overlay" onClick={() => setUnlockOpen(false)}>
-          <form className="modal checkout" role="dialog" aria-modal="true" aria-label="Acceso mayorista" onClick={(e) => e.stopPropagation()} onSubmit={submitCode}>
-            <button type="button" className="close" onClick={() => setUnlockOpen(false)} aria-label="Cerrar">✕</button>
-            <div className="checkout-form">
-              <p className="eyebrow">SOLO PARA TIENDAS</p>
-              <h2>Acceso mayorista</h2>
-              <p className="fine left">
-                Introduce el código que te dio La Gruta. Si aún no tienes uno,{" "}
-                <a href={whatsappLink("Hola La Gruta! Soy una tienda y quiero acceso a los precios mayoristas.")} target="_blank" rel="noreferrer">
-                  pídelo por WhatsApp ↗
-                </a>
-              </p>
-              <label>
-                Código
-                <input value={code} onChange={(e) => { setCode(e.target.value); setCodeError(false); }} autoFocus required autoComplete="off" />
-              </label>
-              {codeError && <p className="warn-box">Código incorrecto.</p>}
-              <button className="btn-primary" type="submit" disabled={pending || !code.trim()}>
-                {pending ? "Comprobando…" : "Entrar"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
       {/* Vista de producto (pop-up) */}
       {quick && (
         <div className="overlay" onClick={() => setQuick(null)}>
@@ -397,7 +296,6 @@ export default function Shop({
               <h2>{quick.name}</h2>
               <p className="price big">
                 {formatPrice(priceOf(quick.id))}
-                {wholesale && <small>{t.perUnit}</small>}
               </p>
               {quick.description && <p className="desc">{quick.description}</p>}
               {quick.details.length > 0 && (
@@ -410,16 +308,12 @@ export default function Shop({
                   </ul>
                 </>
               )}
-              {wholesale && <p className="fine left">{fmt(t.minUnits, { units: WHOLESALE_MIN_UNITS })}</p>}
-              {!wholesale && (
-                <p className="fine left">
-                  {fmt(t.freeShippingFrom, { amount: formatPrice(FREE_SHIPPING_FROM) })}
-                </p>
-              )}
+              <p className="wholesale-note">✳ {fmt(t.wholesaleBandText, { n: WHOLESALE_MIN_ITEMS })}</p>
+              <p className="fine left">{fmt(t.freeShippingFrom, { amount: formatPrice(FREE_SHIPPING_FROM) })}</p>
               <div className="modal-buy">
                 <div className="qty">
                   <button
-                    onClick={() => setQuickQty((q) => Math.max(wholesale ? WHOLESALE_MIN_UNITS : 1, q - 1))}
+                    onClick={() => setQuickQty((q) => Math.max(1, q - 1))}
                     aria-label={t.removeOne}
                   >
                     −
@@ -464,6 +358,15 @@ export default function Shop({
             </div>
           ) : (
             <>
+              <div className={wholesale ? "ship wholesale-ship on" : "ship wholesale-ship"}>
+                <p>
+                  <strong>{t.wholesaleBandTitle}</strong> ·{" "}
+                  {wholesale ? t.wholesaleOn : fmt(t.wholesaleAddMore, { n: itemsLeft })}
+                </p>
+                <div className="bar">
+                  <i style={{ width: `${Math.min(100, (count / WHOLESALE_MIN_ITEMS) * 100)}%` }} />
+                </div>
+              </div>
               {!wholesale && (<div className="ship">
                 <p>
                   {remaining > 0 ? (
@@ -489,7 +392,7 @@ export default function Shop({
                       </div>
                       <div className="line-info">
                         <p className="line-name">{p.name}</p>
-                        <p className="line-meta">{wholesale && l.qty < WHOLESALE_MIN_UNITS && <strong className="warn">{fmt(t.minUnitsShort, { units: WHOLESALE_MIN_UNITS })}</strong>}</p>
+                        <p className="line-meta" />
                         <div className="qty">
                           <button onClick={() => changeQty(l.id, -1)} aria-label={t.removeOne}>−</button>
                           <span aria-live="polite">{l.qty}</span>
@@ -508,11 +411,7 @@ export default function Shop({
               <div className="totals">
                 <p><span>{t.subtotal}</span><span>{formatPrice(subtotal)}</span></p>
                 <p><span>{t.shipping}</span><span>{wholesale ? t.toBeAgreed : shipping === 0 ? t.free : formatPrice(shipping)}</span></p>
-                <p className="grand"><span>{t.total}</span><span>{formatPrice(total)}</span></p>
-                {belowOrder && lines.length > 0 && (
-                  <p className="warn-box">{fmt(t.minOrder, { min: formatPrice(WHOLESALE_MIN_ORDER), rest: formatPrice(WHOLESALE_MIN_ORDER - subtotal) })}</p>
-                )}
-                {belowUnits.length > 0 && <p className="warn-box">{fmt(t.minUnitsEach, { units: WHOLESALE_MIN_UNITS })}</p>}
+                <p className="grand"><span>{t.total}</span><span>{wholesale ? t.toBeAgreed : formatPrice(total)}</span></p>
                 <button
                   className="btn-primary"
                   disabled={!canCheckout}
@@ -609,7 +508,6 @@ function CheckoutModal({
     f.nombre.trim() &&
     f.apellido.trim() &&
     f.contacto.trim() &&
-    (!wholesale || (f.empresa.trim() && f.nif.trim())) &&
     (delivery === "retiro" || (f.street.trim() && f.cp.trim() && f.city.trim() && f.country.trim()));
 
   const buildSummary = () =>
@@ -621,12 +519,13 @@ function CheckoutModal({
         return `• ${l.qty} × ${p.name} — ${formatPrice(priceOf(p.id) * l.qty)}`;
       }),
       "",
-      `${t.wa.subtotal}: ${formatPrice(subtotal)}`,
-      `${t.wa.shipping}: ${shipLabel}`,
-      `${t.wa.total}: ${formatPrice(finalTotal)}`,
+      ...(wholesale
+        ? [`${t.wa.total}: ${t.toBeAgreed}`]
+        : [`${t.wa.subtotal}: ${formatPrice(subtotal)}`, `${t.wa.shipping}: ${shipLabel}`, `${t.wa.total}: ${formatPrice(finalTotal)}`]),
       "",
       `${t.wa.name}: ${f.nombre.trim()} ${f.apellido.trim()}`,
-      ...(wholesale ? [`${t.wa.company}: ${f.empresa.trim()}`, `${t.wa.taxId}: ${f.nif.trim()}`] : []),
+      ...(f.empresa.trim() ? [`${t.wa.company}: ${f.empresa.trim()}`] : []),
+      ...(f.nif.trim() ? [`${t.wa.taxId}: ${f.nif.trim()}`] : []),
       `${t.wa.contact}: ${f.contacto.trim()}`,
       "",
       delivery === "retiro"
@@ -681,7 +580,7 @@ function CheckoutModal({
                   </li>
                 );
               })}
-              <li className="mini-total"><span>{fmt(t.totalShipping, { ship: shipLabel })}</span><span>{formatPrice(finalTotal)}</span></li>
+              <li className="mini-total"><span>{fmt(t.totalShipping, { ship: shipLabel })}</span><span>{wholesale ? t.toBeAgreed : formatPrice(finalTotal)}</span></li>
             </ul>
 
             <div className="row2">
@@ -690,8 +589,8 @@ function CheckoutModal({
             </div>
             {wholesale && (
               <div className="row2">
-                <label>{t.company}<input value={f.empresa} onChange={set("empresa")} required autoComplete="organization" /></label>
-                <label>{t.taxId}<input value={f.nif} onChange={set("nif")} required /></label>
+                <label>{t.company}<input value={f.empresa} onChange={set("empresa")} autoComplete="organization" /></label>
+                <label>{t.taxId}<input value={f.nif} onChange={set("nif")} /></label>
               </div>
             )}
             <label>{t.contact}<input value={f.contacto} onChange={set("contacto")} required autoComplete="email" /></label>

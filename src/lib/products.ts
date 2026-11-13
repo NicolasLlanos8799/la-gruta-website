@@ -29,7 +29,10 @@ export type Product = {
 export const FREE_SHIPPING_FROM = 80;
 export const SHIPPING_COST = 4.9;
 
-// Reglas mayoristas (no secretas). Ajustar a las reales.
+// Venta mayorista: a partir de este nº de prendas en la bolsa el precio se acuerda por WhatsApp.
+export const WHOLESALE_MIN_ITEMS = 15;
+
+// Reglas mayoristas (antiguas, ya no se usan en la tienda) (no secretas). Ajustar a las reales.
 export const WHOLESALE_MIN_UNITS = 3; // unidades mínimas por referencia
 export const WHOLESALE_MIN_ORDER = 300; // pedido mínimo en €
 

@@ -106,6 +106,10 @@ export type Dict = {
     subtotal: string;
     shipping: string;
     toBeAgreed: string;
+    wholesaleBandTitle: string;
+    wholesaleBandText: string; // {n}
+    wholesaleAddMore: string; // {n}
+    wholesaleOn: string;
     free: string;
     total: string;
     minOrder: string; // {min} {rest}
@@ -220,7 +224,7 @@ const es: Dict = {
     brandAria: "La Gruta — inicio",
     navCollections: "Colecciones",
     navAbout: "Sobre La Gruta",
-    navRetail: "Minorista",
+    navRetail: "Tienda",
     navWholesale: "Mayorista",
     tools: "Accesos",
     search: "Buscar",
@@ -273,6 +277,10 @@ const es: Dict = {
     subtotal: "Subtotal",
     shipping: "Envío",
     toBeAgreed: "A convenir",
+    wholesaleBandTitle: "Venta mayorista",
+    wholesaleBandText: "Precio especial comprando {n} o más prendas. Añádelas a tu bolsa y acordamos el precio por WhatsApp.",
+    wholesaleAddMore: "Añade {n} más para activar el precio mayorista",
+    wholesaleOn: "¡Venta mayorista activada! El precio se acuerda por WhatsApp.",
     free: "Gratis",
     total: "Total",
     minOrder: "Pedido mínimo {min}: te faltan {rest}.",
@@ -387,7 +395,7 @@ const ca: Dict = {
     brandAria: "La Gruta — inici",
     navCollections: "Col·leccions",
     navAbout: "Sobre La Gruta",
-    navRetail: "Al detall",
+    navRetail: "Botiga",
     navWholesale: "Majorista",
     tools: "Accessos",
     search: "Cerca",
@@ -440,6 +448,10 @@ const ca: Dict = {
     subtotal: "Subtotal",
     shipping: "Enviament",
     toBeAgreed: "A convenir",
+    wholesaleBandTitle: "Venda majorista",
+    wholesaleBandText: "Preu especial comprant {n} o més peces. Afegeix-les a la teva bossa i acordem el preu per WhatsApp.",
+    wholesaleAddMore: "Afegeix-ne {n} més per activar el preu majorista",
+    wholesaleOn: "Venda majorista activada! El preu s'acorda per WhatsApp.",
     free: "Gratuït",
     total: "Total",
     minOrder: "Comanda mínima {min}: et falten {rest}.",
@@ -554,7 +566,7 @@ const en: Dict = {
     brandAria: "La Gruta — home",
     navCollections: "Collections",
     navAbout: "About La Gruta",
-    navRetail: "Retail",
+    navRetail: "Shop",
     navWholesale: "Wholesale",
     tools: "Quick links",
     search: "Search",
@@ -607,6 +619,10 @@ const en: Dict = {
     subtotal: "Subtotal",
     shipping: "Shipping",
     toBeAgreed: "To be agreed",
+    wholesaleBandTitle: "Wholesale",
+    wholesaleBandText: "Special price when you buy {n} or more items. Add them to your bag and we'll agree the price on WhatsApp.",
+    wholesaleAddMore: "Add {n} more to unlock wholesale pricing",
+    wholesaleOn: "Wholesale activated! The price is agreed on WhatsApp.",
     free: "Free",
     total: "Total",
     minOrder: "Minimum order {min}: you need {rest} more.",

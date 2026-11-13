@@ -23,5 +23,5 @@ export default async function TiendaPage({ params }: { params: Promise<{ lang: s
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const { products, categories } = await getStorefront();
-  return <Shop lang={lang} mode="retail" products={products} categories={categories} />;
+  return <Shop lang={lang} products={products} categories={categories} />;
 }
