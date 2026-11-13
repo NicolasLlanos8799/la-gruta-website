@@ -81,7 +81,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
     <section className="story" id="historia">
       <div className="story-image"><img src="/images/la-gruta-tienda.webp" alt={t.storyAlt}/><span className="story-image-label">{t.storyLabel[0]}<br/>{t.storyLabel[1]}</span></div>
-      <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p><a className="story-link" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">{t.storyLink}</a><span className="story-flower">✿</span><span className="story-flower story-flower-2" aria-hidden="true">✿</span></div>
+      <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p></div>
     </section>
 
     <section className="location" id="visitanos" aria-labelledby="location-title">
