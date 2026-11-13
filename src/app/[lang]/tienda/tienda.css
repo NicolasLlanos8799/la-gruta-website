@@ -205,3 +205,10 @@
  .product-modal .modal-media{min-height:0;aspect-ratio:1/1}
  .product-modal .modal-body{padding:24px 22px 28px}
 }
+
+/* Banda de acceso mayorista */
+.b2b-band.static{margin:0 5.4vw 28px;border-radius:60px;padding:12px 14px 12px 26px;flex-wrap:wrap}
+.b2b-band.static:hover{background:var(--ink)}
+.btn-ghost.light{border-color:#fff!important;color:#fff;padding:10px 22px}
+.btn-ghost.light:hover{background:#fff;color:var(--ink)}
+@media(max-width:700px){.b2b-band.static{border-radius:20px;padding:16px 18px}}

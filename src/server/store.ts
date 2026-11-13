@@ -80,13 +80,14 @@ export const saveCategories = (categories: Category[]) => writeJson("categories.
 
 /* ---------- Lo que ve la tienda ---------- */
 
-export async function getStorefront() {
+export async function getStorefront(wholesale = false) {
   const categories = (await getCategories()).filter((c) => c.active).sort((a, b) => a.order - b.order);
   const names = new Map(categories.map((c) => [c.id, c.name]));
   const products = (await getAllProducts())
     .filter((p) => p.active && names.has(p.category))
     .sort((a, b) => a.createdAt - b.createdAt)
-    .map((p) => ({ ...p, category: names.get(p.category)! }));
+    // Minorista: el precio mayorista nunca viaja al navegador.
+    .map((p) => ({ ...p, category: names.get(p.category)!, wholesalePrice: wholesale ? p.wholesalePrice : null }));
   return { products, categories: categories.map((c) => c.name) };
 }
 

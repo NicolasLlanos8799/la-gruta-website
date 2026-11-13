@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { lockWholesale, unlockWholesale } from "@/app/tienda/actions";
 import AutoRefresh from "./AutoRefresh";
 import LangSwitch from "./LangSwitch";
 import { LOCALE_LABELS, fmt, type Locale } from "@/i18n/config";
@@ -30,8 +32,13 @@ export default function Shop({
   mode = "retail",
   products: all,
   categories: categoryOrder,
+  canUnlock = false,
 }: {
+<<<<<<< HEAD
   lang: Locale;
+=======
+  canUnlock?: boolean;
+>>>>>>> 6e05253 (Implement wholesale access and pricing logic; enhance location section and footer styling)
   mode?: "retail" | "wholesale";
   products: Product[];
   categories: string[];
@@ -67,6 +74,29 @@ export default function Shop({
   const [cartOpen, setCartOpen] = useState(false);
   const [checkout, setCheckout] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const router = useRouter();
+  const [unlockOpen, setUnlockOpen] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState(false);
+  const [pending, startTransition] = useTransition();
+
+  const submitCode = (e: React.FormEvent) => {
+    e.preventDefault();
+    startTransition(async () => {
+      const r = await unlockWholesale(code);
+      if (r.ok) {
+        setUnlockOpen(false);
+        setCode("");
+        setCodeError(false);
+        router.refresh();
+      } else setCodeError(true);
+    });
+  };
+  const exitWholesale = () =>
+    startTransition(async () => {
+      await lockWholesale();
+      router.refresh();
+    });
 
   // Cargar / guardar carrito
   useEffect(() => {
@@ -87,7 +117,7 @@ export default function Shop({
   }, [cart, loaded]);
 
   // Bloquear scroll con paneles abiertos + cerrar con Escape
-  const anyOpen = cartOpen || checkout || !!quick;
+  const anyOpen = cartOpen || checkout || !!quick || unlockOpen;
   useEffect(() => {
     document.body.style.overflow = anyOpen ? "hidden" : "";
     return () => {
@@ -97,13 +127,14 @@ export default function Shop({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (checkout) setCheckout(false);
+      if (unlockOpen) setUnlockOpen(false);
+      else if (checkout) setCheckout(false);
       else if (quick) setQuick(null);
       else if (cartOpen) setCartOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [checkout, quick, cartOpen]);
+  }, [checkout, quick, cartOpen, unlockOpen]);
 
   useEffect(() => {
     if (!toast) return;
@@ -172,10 +203,16 @@ export default function Shop({
           <img className="gruta-logo" src="/images/la-gruta-logo.png" alt={d.common.logoAlt} />
         </Link>
         <nav>
+<<<<<<< HEAD
           <Link href={`${base}#coleccion`}>{t.navCollections}</Link>
           <Link href={`${base}#historia`}>{t.navAbout}</Link>
           <Link href={`${base}/tienda`} aria-current={!wholesale ? "page" : undefined}>{t.navRetail}</Link>
           <Link href={`${base}/mayorista`} aria-current={wholesale ? "page" : undefined}>{t.navWholesale}</Link>
+=======
+          <Link href="/#coleccion">Colecciones</Link>
+          <Link href="/#historia">Sobre La Gruta</Link>
+          <Link href="/tienda" aria-current="page">Tienda</Link>
+>>>>>>> 6e05253 (Implement wholesale access and pricing logic; enhance location section and footer styling)
         </nav>
         <div className="header-tools" aria-label={t.tools}>
           <LangSwitch lang={lang} label={d.common.language} />
@@ -201,6 +238,7 @@ export default function Shop({
         </p>
       </section>
 
+<<<<<<< HEAD
       <div className="store-switch" role="tablist" aria-label={t.switchLabel}>
         <Link href={`${base}/tienda`} role="tab" aria-selected={!wholesale} className={!wholesale ? "on" : ""}>
           <strong>{t.retailTitle}</strong>
@@ -211,6 +249,29 @@ export default function Shop({
           <span>{fmt(t.wholesaleSub, { units: WHOLESALE_MIN_UNITS })}</span>
         </Link>
       </div>
+=======
+      {wholesale ? (
+        <div className="b2b-band static">
+          <span>
+            <strong>Modo mayorista activo</strong> · precios para tiendas
+          </span>
+          <button className="btn-ghost light" onClick={exitWholesale} disabled={pending}>
+            Salir
+          </button>
+        </div>
+      ) : (
+        canUnlock && (
+          <div className="b2b-band static">
+            <span>
+              <strong>¿Tienes una tienda?</strong> Accede con tu código a los precios mayoristas.
+            </span>
+            <button className="btn-ghost light" onClick={() => setUnlockOpen(true)}>
+              Acceso tiendas
+            </button>
+          </div>
+        )
+      )}
+>>>>>>> 6e05253 (Implement wholesale access and pricing logic; enhance location section and footer styling)
 
       <section className="shop-toolbar" aria-label={t.filters}>
         <div className="chips" role="tablist" aria-label={t.categories}>
@@ -293,6 +354,32 @@ export default function Shop({
         </p>
         <small>{t.footerSmall}{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
       </footer>
+
+      {unlockOpen && (
+        <div className="overlay" onClick={() => setUnlockOpen(false)}>
+          <form className="modal checkout" role="dialog" aria-modal="true" aria-label="Acceso mayorista" onClick={(e) => e.stopPropagation()} onSubmit={submitCode}>
+            <button type="button" className="close" onClick={() => setUnlockOpen(false)} aria-label="Cerrar">✕</button>
+            <div className="checkout-form">
+              <p className="eyebrow">SOLO PARA TIENDAS</p>
+              <h2>Acceso mayorista</h2>
+              <p className="fine left">
+                Introduce el código que te dio La Gruta. Si aún no tienes uno,{" "}
+                <a href={whatsappLink("Hola La Gruta! Soy una tienda y quiero acceso a los precios mayoristas.")} target="_blank" rel="noreferrer">
+                  pídelo por WhatsApp ↗
+                </a>
+              </p>
+              <label>
+                Código
+                <input value={code} onChange={(e) => { setCode(e.target.value); setCodeError(false); }} autoFocus required autoComplete="off" />
+              </label>
+              {codeError && <p className="warn-box">Código incorrecto.</p>}
+              <button className="btn-primary" type="submit" disabled={pending || !code.trim()}>
+                {pending ? "Comprobando…" : "Entrar"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Vista de producto (pop-up) */}
       {quick && (
