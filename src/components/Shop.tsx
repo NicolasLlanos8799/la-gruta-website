@@ -172,7 +172,7 @@ export default function Shop({
           <button className="bag-icon" onClick={() => setCartOpen(true)} aria-label={fmt(t.openBag, { n: count })}>
             {count > 0 && <span className="bag-count">{count}</span>}
           </button>
-          <MobileMenu lang={lang} links={[{ label: d.home.footerShop, href: `${base}/tienda` }, { label: t.navAbout, href: `${base}#historia` }, { label: d.home.footerContact, href: `${base}#contacto` }]} />
+          <MobileMenu lang={lang} languageLabel={d.common.language} links={[{ label: d.home.footerShop, href: `${base}/tienda` }, { label: t.navAbout, href: `${base}#historia` }, { label: d.home.footerContact, href: `${base}#contacto` }]} />
         </div>
       </header>
 

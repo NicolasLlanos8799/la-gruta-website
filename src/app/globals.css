@@ -252,3 +252,14 @@ html{scroll-padding-top:96px}
 .gruta-logo{width:96px}
 @media(max-width:900px){.site-header{height:80px}.gruta-logo{width:86px}}
 @media(max-width:700px){.site-header{height:68px}.gruta-logo{width:72px}}
+
+/* Selector de idioma dentro del menú móvil */
+@media(max-width:700px){
+  .header-tools:has(.burger)>.lang-switch{display:none}
+  .shop .site-header nav.mobile-menu{display:flex}
+  .site-header nav.mobile-menu .mobile-menu-lang{margin-top:auto;padding-top:32px}
+  .site-header nav.mobile-menu .mobile-menu-lang p{font:700 11px/1 Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase;color:var(--wine);margin:0 0 12px}
+  .site-header nav.mobile-menu .lang-switch{display:flex;gap:8px}
+  .site-header nav.mobile-menu .lang-switch a{display:inline-flex;align-items:center;justify-content:center;font:700 14px/1 Arial,sans-serif;letter-spacing:.08em;height:40px;min-width:56px;padding:0 16px;border:1px solid rgba(7,61,48,.25);border-bottom:1px solid rgba(7,61,48,.25);border-radius:30px;color:#101010;opacity:1}
+  .site-header nav.mobile-menu .lang-switch a.on{background:#073d32;border-color:#073d32;color:#fff}
+}

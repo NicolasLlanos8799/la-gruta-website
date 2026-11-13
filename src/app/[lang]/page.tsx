@@ -49,7 +49,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     <header className="site-header">
       <a className="brand gruta-brand" href="#top"><img className="gruta-logo" src="/images/la-gruta-logo.png" alt={d.common.logoAlt} /></a>
       <nav><Link href={`${base}/tienda`}>{t.footerShop}</Link><a href="#historia">{t.navAbout}</a><a href="#contacto">{t.footerContact}</a></nav>
-      <div className="header-tools" aria-label={t.tools}><LangSwitch lang={lang} label={d.common.language} /><Link href={`${base}/tienda`} aria-label={t.bag} className="bag-icon"></Link><MobileMenu lang={lang} links={[{ label: t.footerShop, href: `${base}/tienda` }, { label: t.navAbout, href: "#historia" }, { label: t.footerContact, href: "#contacto" }]} /></div>
+      <div className="header-tools" aria-label={t.tools}><LangSwitch lang={lang} label={d.common.language} /><Link href={`${base}/tienda`} aria-label={t.bag} className="bag-icon"></Link><MobileMenu lang={lang} languageLabel={d.common.language} links={[{ label: t.footerShop, href: `${base}/tienda` }, { label: t.navAbout, href: "#historia" }, { label: t.footerContact, href: "#contacto" }]} /></div>
     </header>
 
     <section className="hero hero-reference" id="top">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import LangSwitch from "./LangSwitch";
 import type { Locale } from "@/i18n/config";
 
 const LABELS: Record<Locale, { open: string; close: string }> = {
@@ -10,7 +11,15 @@ const LABELS: Record<Locale, { open: string; close: string }> = {
 };
 
 /** Menú hamburguesa para móvil. Los enlaces son los mismos que los del navbar de escritorio. */
-export default function MobileMenu({ lang, links }: { lang: Locale; links: { label: string; href: string }[] }) {
+export default function MobileMenu({
+  lang,
+  links,
+  languageLabel,
+}: {
+  lang: Locale;
+  links: { label: string; href: string }[];
+  languageLabel: string;
+}) {
   const [open, setOpen] = useState(false);
   const l = LABELS[lang];
 
@@ -42,6 +51,10 @@ export default function MobileMenu({ lang, links }: { lang: Locale; links: { lab
         {links.map((x) => (
           <a key={x.href} href={x.href} tabIndex={open ? 0 : -1}>{x.label}</a>
         ))}
+        <div className="mobile-menu-lang">
+          <p>{languageLabel}</p>
+          <LangSwitch lang={lang} label={languageLabel} />
+        </div>
       </nav>
     </>
   );
