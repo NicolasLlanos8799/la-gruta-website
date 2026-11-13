@@ -84,6 +84,17 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p></div>
     </section>
 
+    <section className="trade" id="mayor-menor" aria-labelledby="trade-title">
+      <div className="trade-head">
+        <p className="eyebrow">{t.trade.eyebrow}</p>
+        <h2 id="trade-title">{t.trade.title1} <em>{t.trade.titleEm}</em></h2>
+      </div>
+      <div className="trade-cards">
+        <article><h3>{t.trade.retailTitle}</h3><p>{t.trade.retailText}</p><Link href={`${base}/tienda`}>{t.viewShop} →</Link></article>
+        <article><h3>{t.trade.wholesaleTitle}</h3><p>{t.trade.wholesaleText}</p><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer">{t.trade.button}</a></article>
+      </div>
+    </section>
+
     <section className="location" id="visitanos" aria-labelledby="location-title">
       <div className="location-main">
         <p className="location-eyebrow"><span>{t.locEyebrow}</span><i aria-hidden="true" /></p>

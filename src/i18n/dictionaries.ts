@@ -40,6 +40,7 @@ export type Dict = {
     storyText: string;
     seo: { h1Extra: string; blocks: { h2: string; intro?: string; items?: { h3: string; p: string }[] }[] };
     storyLink: string;
+    trade: { eyebrow: string; title1: string; titleEm: string; retailTitle: string; retailText: string; wholesaleTitle: string; wholesaleText: string; button: string };
     visitShape: [string, string];
     visitEyebrow: string;
     visitTitle1: string;
@@ -245,6 +246,7 @@ const es: Dict = {
       ],
     },
     storyLink: "Conócenos en Instagram",
+    trade: { eyebrow: "VENTA POR MAYOR Y MENOR", title1: "Para ti, o para", titleEm: "tu tienda.", retailTitle: "Venta al por menor", retailText: "Ven a la tienda en Barcelona o compra online. Piezas únicas, atención cercana y envíos a todo el mundo.", wholesaleTitle: "Venta al por mayor", wholesaleText: "¿Tienes una tienda o un proyecto? Escríbenos y te preparamos precios y condiciones para pedidos al por mayor.", button: "Escríbenos por WhatsApp ↗" },
     visitShape: ["HOLA", "BARCELONA!"],
     visitEyebrow: "LAS COSAS BONITAS PASAN EN PERSONA",
     visitTitle1: "Ven a",
@@ -450,6 +452,7 @@ const ca: Dict = {
       ],
     },
     storyLink: "Coneix-nos a Instagram",
+    trade: { eyebrow: "VENDA AL MAJOR I AL DETALL", title1: "Per a tu, o per a", titleEm: "la teva botiga.", retailTitle: "Venda al detall", retailText: "Vine a la botiga de Barcelona o compra en línia. Peces úniques, tracte proper i enviaments a tot el món.", wholesaleTitle: "Venda al major", wholesaleText: "Tens una botiga o un projecte? Escriu-nos i et preparem preus i condicions per a comandes al major.", button: "Escriu-nos per WhatsApp ↗" },
     visitShape: ["HOLA", "BARCELONA!"],
     visitEyebrow: "LES COSES BONIQUES PASSEN EN PERSONA",
     visitTitle1: "Vine a",
@@ -655,6 +658,7 @@ const en: Dict = {
       ],
     },
     storyLink: "Find us on Instagram",
+    trade: { eyebrow: "WHOLESALE & RETAIL", title1: "For you, or for", titleEm: "your store.", retailTitle: "Retail", retailText: "Visit the shop in Barcelona or buy online. One-of-a-kind pieces, friendly service and worldwide shipping.", wholesaleTitle: "Wholesale", wholesaleText: "Own a store or a project? Message us and we will send you prices and terms for wholesale orders.", button: "Message us on WhatsApp ↗" },
     visitShape: ["HELLO", "BARCELONA!"],
     visitEyebrow: "BEAUTIFUL THINGS HAPPEN IN PERSON",
     visitTitle1: "Come and",

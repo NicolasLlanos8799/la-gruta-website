@@ -280,3 +280,14 @@ html{scroll-padding-top:96px}
   .footer-contact b{min-width:0}
   footer.site-footer .footer-copy{white-space:normal}
 }
+
+/* ===== Venta por mayor y menor ===== */
+.trade{background:var(--yellow);color:var(--ink);padding:clamp(64px,8vw,110px) 8vw;display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,5vw,80px);align-items:center}
+.trade h2{font:400 clamp(40px,5vw,72px)/1 Georgia,serif;letter-spacing:-.04em;margin:18px 0 0}
+.trade h2 em{color:var(--wine)}
+.trade-cards{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.trade-cards article{background:var(--paper);padding:30px 28px;display:flex;flex-direction:column;gap:14px;box-shadow:8px 8px 0 var(--ink)}
+.trade-cards h3{font:400 28px/1.1 Georgia,serif;margin:0}
+.trade-cards p{margin:0;font-size:15px;line-height:1.6;flex:1}
+.trade-cards a{font-size:13px;font-weight:700;letter-spacing:.06em;border-bottom:1.5px solid var(--ink);align-self:flex-start;padding-bottom:3px}
+@media(max-width:900px){.trade{grid-template-columns:1fr}.trade-cards{grid-template-columns:1fr}}
