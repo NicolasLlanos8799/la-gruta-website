@@ -14,6 +14,7 @@ import {
   SHIPPING_COST,
   WHOLESALE_MIN_ITEMS,
   whatsappLink,
+  WHATSAPP_NUMBER,
   formatPrice as formatPriceIntl,
   type Product,
 } from "@/lib/products";
@@ -270,14 +271,16 @@ export default function Shop({
         )}
       </main>
 
-      <footer className="shop-footer">
-        <p>
-          {t.footerHelp}{" "}
-          <a href={whatsappLink(t.wa.hello)} target="_blank" rel="noreferrer">
-            WhatsApp
-          </a>
-        </p>
-        <small>{t.footerSmall}{PRIVACY_LINK && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
+      <footer className="site-footer" id="contacto">
+        <Link className="footer-logo" href={base}><img src="/images/la-gruta-logo.png" alt={d.common.logoAlt} /></Link>
+        <nav className="footer-links" aria-label={d.home.footerNavAria}><Link href={`${base}/tienda`}>{d.home.footerShop}</Link><Link href={`${base}/blog`}>Blog</Link><Link href={`${base}#historia`}>{d.home.footerAbout}</Link></nav>
+        <div className="footer-contact">
+          <p className="footer-contact-title">{d.home.footerContact}</p>
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer"><b>WhatsApp</b> +34 665 42 09 83</a>
+          <a href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer" aria-label={d.common.instagramAria}><b>Instagram</b> @lagrutabcn</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=Carrer+de+Verdi+8+08012+Barcelona" target="_blank" rel="noreferrer"><b>{d.home.locLabel}</b> {d.home.locAddress1}, {d.home.locAddress2}</a>
+        </div>
+        <small className="footer-copy">© LA GRUTA 2026{PRIVACY_LINK && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
       </footer>
 
       {/* Vista de producto (pop-up) */}
