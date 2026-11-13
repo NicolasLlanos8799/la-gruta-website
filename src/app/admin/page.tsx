@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { adminConfigured, isAdmin } from "@/server/admin-auth";
-import { getAllProducts, getCategories } from "@/server/store";
+import { getAllProducts, getCategories, getSettings } from "@/server/store";
 import AdminPanel from "./AdminPanel";
 import LoginForm from "./LoginForm";
 import "./admin.css";
@@ -28,7 +28,8 @@ export default async function AdminPage() {
   }
   const categories = (await getCategories()).sort((a, b) => a.order - b.order);
   const products = await getAllProducts();
+  const { shopOpen } = await getSettings();
   const usingBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
   const prod = process.env.NODE_ENV === "production";
-  return <AdminPanel products={products} categories={categories} storageWarning={prod && !usingBlob} />;
+  return <AdminPanel products={products} categories={categories} storageWarning={prod && !usingBlob} shopOpen={shopOpen} previewPath="/secret-tienda" />;
 }

@@ -48,12 +48,14 @@ export default function MobileMenu({
         <span /><span /><span />
       </button>
       <nav id="mobile-menu" className={`mobile-menu${open ? " is-open" : ""}`} aria-hidden={!open} onClick={() => setOpen(false)}>
-        {links.map((x) => (
-          <a key={x.href} href={x.href} tabIndex={open ? 0 : -1}>{x.label}</a>
-        ))}
-        <div className="mobile-menu-lang">
-          <p>{languageLabel}</p>
-          <LangSwitch lang={lang} label={languageLabel} />
+        <div className="mobile-menu-panel" onClick={(e) => e.stopPropagation()}>
+          {links.map((x) => (
+            <a key={x.href} href={x.href} tabIndex={open ? 0 : -1} onClick={() => setOpen(false)}>{x.label}</a>
+          ))}
+          <div className="mobile-menu-lang">
+            <p>{languageLabel}</p>
+            <LangSwitch lang={lang} label={languageLabel} />
+          </div>
         </div>
       </nav>
     </>

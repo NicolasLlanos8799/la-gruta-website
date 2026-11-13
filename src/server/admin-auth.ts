@@ -27,3 +27,15 @@ export async function isAdmin() {
   const v = (await cookies()).get(ADMIN_COOKIE)?.value;
   return !!v && same(v, tokenFor(process.env.ADMIN_PASSWORD!));
 }
+
+/* ---------- Acceso privado a la tienda mientras está cerrada (/secret-tienda) ---------- */
+
+export const PREVIEW_COOKIE = "gruta_preview";
+
+export const makePreviewToken = () =>
+  createHash("sha256").update(`preview:${process.env.ADMIN_SECRET ?? "gruta-admin"}`).digest("hex");
+
+export async function hasPreviewAccess() {
+  const v = (await cookies()).get(PREVIEW_COOKIE)?.value;
+  return !!v && same(v, makePreviewToken());
+}

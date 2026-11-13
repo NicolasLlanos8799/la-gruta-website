@@ -9,8 +9,10 @@ import {
   deleteImage,
   getAllProducts,
   getCategories,
+  getSettings,
   saveAllProducts,
   saveCategories,
+  saveSettings,
   slugify,
   uploadImage,
 } from "@/server/store";
@@ -22,6 +24,7 @@ async function guard() {
 }
 
 const refresh = () => {
+  revalidatePath("/[lang]/tienda", "page");
   revalidatePath("/tienda");
   revalidatePath("/mayorista");
   revalidatePath("/admin");
@@ -190,6 +193,19 @@ export async function deleteCategory(id: string): Promise<Result> {
         error: `No se puede eliminar: tiene ${used} producto${used === 1 ? "" : "s"}. Muévelos a otra categoría o desactívala.`,
       };
     await saveCategories(categories.filter((c) => c.id !== id));
+    refresh();
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "Error" };
+  }
+}
+
+/* ---------- Tienda abierta / cerrada ---------- */
+
+export async function setShopOpen(open: boolean): Promise<Result> {
+  try {
+    await guard();
+    await saveSettings({ ...(await getSettings()), shopOpen: open });
     refresh();
     return { ok: true };
   } catch (e) {

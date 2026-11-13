@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition } from "react";
 import { formatPrice, type Category, type Product } from "@/lib/products";
-import { deleteCategory, deleteProduct, logout, saveCategory, saveProduct, toggleActive, toggleCategory } from "./actions";
+import { deleteCategory, deleteProduct, logout, saveCategory, saveProduct, setShopOpen, toggleActive, toggleCategory } from "./actions";
 
 const BADGES = ["", "Nuevo", "Pieza única", "Últimas unidades"];
 
@@ -30,10 +30,14 @@ export default function AdminPanel({
   products,
   categories,
   storageWarning,
+  shopOpen,
+  previewPath,
 }: {
   products: Product[];
   categories: Category[];
   storageWarning: boolean;
+  shopOpen: boolean;
+  previewPath: string;
 }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -50,6 +54,11 @@ export default function AdminPanel({
       .sort((a, b) => b.createdAt - a.createdAt)
       .filter((p) => !q || p.name.toLowerCase().includes(q) || catName(p.category).toLowerCase().includes(q));
   }, [products, filter, categories]);
+
+  const flash = (m: string) => {
+    setMsg(m);
+    setTimeout(() => setMsg(null), 3000);
+  };
 
   const run = (fn: () => Promise<{ ok: boolean; error?: string }>, ok?: string) =>
     startTransition(async () => {
@@ -79,6 +88,38 @@ export default function AdminPanel({
           <form action={logout}><button className="a-btn" type="submit">Salir</button></form>
         </div>
       </header>
+
+      <section className={`a-shop ${shopOpen ? "open" : "closed"}`} aria-label="Estado de la tienda">
+        <div>
+          <strong>{shopOpen ? "Tienda abierta" : "Tienda cerrada · “Próximamente”"}</strong>
+          <p>
+            {shopOpen
+              ? "Todo el mundo puede ver y comprar en la tienda."
+              : "El público ve “Próximamente”. Tú puedes entrar con este enlace secreto:"}
+          </p>
+          {!shopOpen && (
+            <button
+              type="button"
+              className="a-link"
+              onClick={() => {
+                const url = `${window.location.origin}${previewPath}`;
+                navigator.clipboard?.writeText(url).then(() => flash("Enlace copiado"), () => flash(url));
+              }}
+            >
+              {previewPath} · copiar enlace
+            </button>
+          )}
+        </div>
+        <button
+          className={`a-btn ${shopOpen ? "" : "primary"}`}
+          onClick={() => {
+            if (shopOpen && !confirm("¿Cerrar la tienda? El público volverá a ver “Próximamente”.")) return;
+            run(() => setShopOpen(!shopOpen), shopOpen ? "Tienda cerrada" : "Tienda abierta");
+          }}
+        >
+          {shopOpen ? "Cerrar tienda" : "Abrir tienda"}
+        </button>
+      </section>
 
       {storageWarning && (
         <p className="a-warn">

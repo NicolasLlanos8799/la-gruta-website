@@ -240,3 +240,11 @@
  .modal-buy .btn-primary{flex:1 1 100%;min-width:0;padding:16px 14px;font-size:14px;order:2}
  .modal-buy .qty{order:1}
 }
+
+/* Tienda cerrada: "Próximamente" */
+.coming-soon{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;background:var(--paper);color:var(--ink)}
+.coming-soon-brand{font:34px Georgia,serif;letter-spacing:-2.5px;margin:0 0 28px}
+.coming-soon h1{font:400 clamp(52px,10vw,110px)/.9 Georgia,serif;letter-spacing:-.06em;margin:0 0 24px;color:var(--wine)}
+.coming-soon p{max-width:420px;font-size:15px;line-height:1.7;color:#493d39;margin:0 0 32px}
+.coming-soon .coming-soon-brand{color:var(--ink);max-width:none}
+.coming-soon-link{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid;padding-bottom:4px}

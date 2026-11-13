@@ -78,6 +78,17 @@ export async function getCategories(): Promise<Category[]> {
 
 export const saveCategories = (categories: Category[]) => writeJson("categories.json", categories);
 
+/* ---------- Ajustes (tienda abierta/cerrada) ---------- */
+
+export type Settings = { shopOpen: boolean };
+
+export async function getSettings(): Promise<Settings> {
+  const data = await readJson<Partial<Settings>>("settings.json");
+  return { shopOpen: data?.shopOpen === true };
+}
+
+export const saveSettings = (settings: Settings) => writeJson("settings.json", settings);
+
 /* ---------- Lo que ve la tienda ---------- */
 
 export async function getStorefront() {
