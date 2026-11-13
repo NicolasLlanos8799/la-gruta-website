@@ -38,6 +38,7 @@ export type Dict = {
     storyTitle2: string;
     storyEm: string;
     storyText: string;
+    seo: { h1Extra: string; blocks: { h2: string; intro?: string; items?: { h3: string; p: string }[] }[] };
     storyLink: string;
     visitShape: [string, string];
     visitEyebrow: string;
@@ -187,8 +188,8 @@ export type Dict = {
 
 const es: Dict = {
   meta: {
-    homeTitle: "La Gruta — Moda y arte en Barcelona",
-    homeDescription: "Una tienda de ropa diferente. Moda y arte desde Barcelona.",
+    homeTitle: "La Gruta | Moda alternativa y arte en Gràcia, Barcelona",
+    homeDescription: "Tienda independiente en Gràcia: ropa boho artesanal, kimonos, chaquetas kantha, máscaras y vajilla pintada a mano. Slow fashion en Carrer de Verdi 8.",
     shopTitle: "Tienda — La Gruta",
     shopDescription: "Catálogo online de La Gruta: ropa, accesorios y piezas únicas con color. Moda y arte desde Barcelona.",
     wholesaleTitle: "Tienda mayorista — La Gruta",
@@ -216,14 +217,34 @@ const es: Dict = {
     collectionEm: "online.",
     collectionDescription: "Ropa, accesorios y piezas únicas con la esencia de La Gruta.",
     collectionAlt: "Jerséis coloridos de La Gruta en perchas de madera",
-    storyAlt: "Interior de la boutique La Gruta",
+    storyAlt: "Escaparate de la tienda La Gruta en Carrer de Verdi, Gràcia, con chaqueta kantha y ropa de colores",
     storyLabel: ["ENTRA, MIRA,", "DESCUBRE."],
     storyEyebrow: "UN LUGAR DIFERENTE",
     storyTitle1: "Más que",
     storyTitle2: "una",
     storyEm: "tienda.",
     storyText: "La Gruta es un espacio donde la moda se encuentra con el arte. Una selección diferente, hecha para descubrir, combinar y expresar quién eres.",
-    storyLink: "Conócenos en Instagram ↗",
+    seo: {
+      h1Extra: " — moda alternativa y arte en Gràcia, Barcelona",
+      blocks: [
+        { h2: "Moda con alma, lejos del fast fashion", intro: "Trabajamos lo que llamamos confección diversa: diseño propio que se encuentra con técnicas textiles artesanales y la inspiración de muchas culturas. Priorizamos los materiales naturales porque la ropa bonita también tiene que ser cómoda.", items: [
+          { h3: "Diseño propio y técnicas artesanales", p: "Del acolchado kantha a los tejidos ikat, cada prenda mezcla tradición y un punto muy nuestro." },
+          { h3: "Materiales naturales: seda, algodón y viscosa", p: "Faldas, blusas y vestidos pensados para moverse libre y para durar." },
+        ] },
+        { h2: "Lo que encontrarás en la tienda", items: [
+          { h3: "Vestidos y faldas sueltos", p: "Modelos como Sitges, Búzios o Provençe, y faldas de seda, algodón y viscosa." },
+          { h3: "Kimonos, chalecos y blusas", p: "Camisas, kimonos, chalecos y pantalones estampados que transforman cualquier look, para quien no quiere pasar desapercibido." },
+          { h3: "Chaquetas kantha, ikat y reversibles", p: "Reversibles, de terciopelo ikat o con la técnica kantha: dos looks en una sola pieza, y ninguna igual que la de al lado." },
+          { h3: "Máscaras, decoración y vajilla pintada a mano", p: "La Gruta no es solo ropa: también arte artesanal para llevar a casa." },
+        ] },
+        { h2: "Un espacio para todes", intro: "Nuestra ropa es para mujeres, hombres y quien se sienta cómodo con ella. La Gruta es un espacio inclusivo y seguro para el colectivo LGBTQ+, donde puedes probarte lo que quieras sin etiquetas, con atención personalizada y consejo sincero." },
+        { h2: "Compra como prefieras", items: [
+          { h3: "Cómo pagar y recoger tu pedido", p: "Puedes pagar con tarjeta o Bizum y recoger tu pieza en la tienda de Carrer de Verdi, 8." },
+          { h3: "Envíos a todo el mundo", p: "Escríbenos por Instagram (@lagrutabcn) o por WhatsApp al +34 665 42 09 83 y te lo enviamos donde estés." },
+        ] },
+      ],
+    },
+    storyLink: "Conócenos en Instagram",
     visitShape: ["HOLA", "BARCELONA!"],
     visitEyebrow: "LAS COSAS BONITAS PASAN EN PERSONA",
     visitTitle1: "Ven a",
@@ -372,8 +393,8 @@ const es: Dict = {
 
 const ca: Dict = {
   meta: {
-    homeTitle: "La Gruta — Moda i art a Barcelona",
-    homeDescription: "Una botiga de roba diferent. Moda i art des de Barcelona.",
+    homeTitle: "La Gruta | Moda alternativa i art a Gràcia, Barcelona",
+    homeDescription: "Botiga independent a Gràcia: roba boho artesanal, quimonos, jaquetes kantha, màscares i vaixella pintada a mà. Slow fashion al Carrer de Verdi 8.",
     shopTitle: "Botiga — La Gruta",
     shopDescription: "Catàleg en línia de La Gruta: roba, accessoris i peces úniques amb color. Moda i art des de Barcelona.",
     wholesaleTitle: "Botiga majorista — La Gruta",
@@ -401,14 +422,34 @@ const ca: Dict = {
     collectionEm: "en línia.",
     collectionDescription: "Roba, accessoris i peces úniques amb l'essència de La Gruta.",
     collectionAlt: "Jerseis de colors de La Gruta en penjadors de fusta",
-    storyAlt: "Interior de la botiga La Gruta",
+    storyAlt: "Aparador de la botiga La Gruta al Carrer de Verdi, Gràcia, amb jaqueta kantha i roba de colors",
     storyLabel: ["ENTRA, MIRA,", "DESCOBREIX."],
     storyEyebrow: "UN LLOC DIFERENT",
     storyTitle1: "Més que",
     storyTitle2: "una",
     storyEm: "botiga.",
     storyText: "La Gruta és un espai on la moda es troba amb l'art. Una selecció diferent, feta per descobrir, combinar i expressar qui ets.",
-    storyLink: "Coneix-nos a Instagram ↗",
+    seo: {
+      h1Extra: " — moda alternativa i art a Gràcia, Barcelona",
+      blocks: [
+        { h2: "Moda amb ànima, lluny del fast fashion", intro: "Treballem el que anomenem confecció diversa: disseny propi que es troba amb tècniques tèxtils artesanals i la inspiració de moltes cultures. Prioritzem els materials naturals perquè la roba bonica també ha de ser còmoda.", items: [
+          { h3: "Disseny propi i tècniques artesanals", p: "De l'encoixinat kantha als teixits ikat, cada peça barreja tradició i un punt molt nostre." },
+          { h3: "Materials naturals: seda, cotó i viscosa", p: "Faldilles, brusques i vestits pensats per moure's lliure i per durar." },
+        ] },
+        { h2: "Què trobaràs a la botiga", items: [
+          { h3: "Vestits i faldilles amples", p: "Models com Sitges, Búzios o Provençe, i faldilles de seda, cotó i viscosa." },
+          { h3: "Quimonos, armilles i brusques", p: "Camises, quimonos, armilles i pantalons estampats que transformen qualsevol look, per a qui no vol passar desapercebut." },
+          { h3: "Jaquetes kantha, ikat i reversibles", p: "Reversibles, de vellut ikat o amb la tècnica kantha: dos looks en una sola peça, i cap igual que la del costat." },
+          { h3: "Màscares, decoració i vaixella pintada a mà", p: "La Gruta no és només roba: també art artesanal per emportar-te a casa." },
+        ] },
+        { h2: "Un espai per a tothom", intro: "La nostra roba és per a dones, homes i qui s'hi senti còmode. La Gruta és un espai inclusiu i segur per al col·lectiu LGBTQ+, on pots provar-te el que vulguis sense etiquetes, amb atenció personalitzada i consell sincer." },
+        { h2: "Compra com prefereixis", items: [
+          { h3: "Com pagar i recollir la teva comanda", p: "Pots pagar amb targeta o Bizum i recollir la peça a la botiga del Carrer de Verdi, 8." },
+          { h3: "Enviaments a tot el món", p: "Escriu-nos per Instagram (@lagrutabcn) o per WhatsApp al +34 665 42 09 83 i t'ho enviem allà on siguis." },
+        ] },
+      ],
+    },
+    storyLink: "Coneix-nos a Instagram",
     visitShape: ["HOLA", "BARCELONA!"],
     visitEyebrow: "LES COSES BONIQUES PASSEN EN PERSONA",
     visitTitle1: "Vine a",
@@ -557,8 +598,8 @@ const ca: Dict = {
 
 const en: Dict = {
   meta: {
-    homeTitle: "La Gruta — Fashion and art in Barcelona",
-    homeDescription: "A different kind of clothing shop. Fashion and art from Barcelona.",
+    homeTitle: "La Gruta | Alternative fashion & art in Gràcia, Barcelona",
+    homeDescription: "Independent shop in Gràcia: handcrafted boho clothing, kimonos, kantha jackets, masks and hand-painted tableware. Slow fashion at Carrer de Verdi 8.",
     shopTitle: "Shop — La Gruta",
     shopDescription: "La Gruta's online catalogue: clothing, accessories and unique, colourful pieces. Fashion and art from Barcelona.",
     wholesaleTitle: "Wholesale shop — La Gruta",
@@ -586,14 +627,34 @@ const en: Dict = {
     collectionEm: "shop.",
     collectionDescription: "Clothing, accessories and unique pieces with the essence of La Gruta.",
     collectionAlt: "Colourful La Gruta jumpers on wooden hangers",
-    storyAlt: "Inside the La Gruta boutique",
+    storyAlt: "La Gruta shop window on Carrer de Verdi, Gràcia, with a kantha jacket and colourful clothing",
     storyLabel: ["STEP IN, LOOK,", "DISCOVER."],
     storyEyebrow: "A DIFFERENT PLACE",
     storyTitle1: "More than",
     storyTitle2: "a",
     storyEm: "shop.",
     storyText: "La Gruta is a space where fashion meets art. A different selection, made for discovering, mixing and expressing who you are.",
-    storyLink: "Find us on Instagram ↗",
+    seo: {
+      h1Extra: " — alternative fashion and art in Gràcia, Barcelona",
+      blocks: [
+        { h2: "Fashion with soul, far from fast fashion", intro: "We work in what we call diverse tailoring: our own designs meeting artisan textile techniques and inspiration from many cultures. We favour natural materials, because beautiful clothes should be comfortable too.", items: [
+          { h3: "Our own designs and artisan techniques", p: "From kantha quilting to ikat weaves, every piece blends tradition with a touch that is all ours." },
+          { h3: "Natural materials: silk, cotton and viscose", p: "Skirts, blouses and dresses made to move freely and to last." },
+        ] },
+        { h2: "What you'll find in the shop", items: [
+          { h3: "Loose dresses and skirts", p: "Styles like Sitges, Búzios or Provençe, plus silk, cotton and viscose skirts." },
+          { h3: "Kimonos, waistcoats and blouses", p: "Shirts, kimonos, waistcoats and printed trousers that transform any look, for anyone who doesn't want to blend in." },
+          { h3: "Kantha, ikat and reversible jackets", p: "Reversible, ikat velvet or kantha-quilted: two looks in one piece, and no two alike." },
+          { h3: "Masks, decor and hand-painted tableware", p: "La Gruta isn't just clothes: it's also handmade art to take home." },
+        ] },
+        { h2: "A space for everyone", intro: "Our clothes are for women, men and anyone who feels good in them. La Gruta is an inclusive, safe space for the LGBTQ+ community, where you can try on whatever you like, free of labels, with personal attention and honest advice." },
+        { h2: "Shop the way you prefer", items: [
+          { h3: "How to pay and collect your order", p: "Pay by card or Bizum and collect your piece at the shop on Carrer de Verdi, 8." },
+          { h3: "Worldwide shipping", p: "Message us on Instagram (@lagrutabcn) or WhatsApp at +34 665 42 09 83 and we'll ship wherever you are." },
+        ] },
+      ],
+    },
+    storyLink: "Find us on Instagram",
     visitShape: ["HELLO", "BARCELONA!"],
     visitEyebrow: "BEAUTIFUL THINGS HAPPEN IN PERSON",
     visitTitle1: "Come and",

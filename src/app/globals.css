@@ -197,3 +197,58 @@ footer.site-footer .footer-social{border-bottom:0;padding:0}
   .hero-reference .hero-sunburst{transform-origin:50% 50%;transform:translateY(calc(var(--hero-p) * 40px))}
   .hero-reference picture{transform:none}
 }
+
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Sección "Un lugar diferente" — mismo formato, más pulida */
+.story{min-height:680px;grid-template-columns:1.1fr .9fr;background:#e98fa2;position:relative;overflow:hidden}
+.story-image{min-height:680px;padding:64px 40px 64px 8vw;display:flex;align-items:center}
+.story-image img{height:100%;max-height:560px;border:8px solid var(--paper);border-radius:46% 46% 6px 6px/22% 22% 6px 6px;box-shadow:16px 16px 0 var(--yellow);transform:rotate(-1.5deg);object-position:50% 40%}
+.story-image-label{left:3%;bottom:10%;background:var(--yellow);border:2px solid var(--ink);padding:16px 20px;font:22px/1.05 Georgia,serif;font-style:italic;transform:rotate(-6deg);box-shadow:5px 5px 0 var(--ink);z-index:2}
+.story-copy{padding:80px 9% 80px 5%;z-index:1}
+.story-copy .eyebrow{display:flex;align-items:center;gap:14px;color:var(--ink)}
+.story-copy .eyebrow:after{content:"";width:54px;height:2px;background:var(--ink)}
+.story-copy h2{font-size:clamp(66px,7.4vw,110px);line-height:.88;margin:26px 0 30px}
+.story-copy h2 em{color:var(--paper)}
+.story-copy>p:not(.eyebrow){max-width:400px;font-size:16px;line-height:1.8;color:#2d2326;margin:0 0 34px}
+.story-link{display:inline-block;background:var(--ink);color:var(--paper);padding:16px 22px;font-size:12px;font-weight:700;letter-spacing:.06em;box-shadow:5px 5px 0 var(--yellow);transition:transform .2s,box-shadow .2s}
+.story-link:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--yellow)}
+.story-flower{right:-30px;bottom:-70px;font-size:240px;color:#f5cf48;opacity:.9;z-index:0;pointer-events:none}
+.story-flower-2{right:auto;left:42%;top:-40px;bottom:auto;font-size:90px;color:var(--paper);opacity:.55}
+@media(max-width:700px){.story{grid-template-columns:1fr;min-height:0}.story-image{min-height:0;padding:44px 9vw 20px;display:block}.story-image img{height:auto;max-height:none;aspect-ratio:4/5;box-shadow:10px 10px 0 var(--yellow)}.story-image-label{left:4vw;bottom:8%;font-size:18px}.story-copy{padding:44px 9vw 80px}.story-copy h2{font-size:72px}.story-flower{font-size:170px}.story-flower-2{display:none}}
+
+/* Pie de página con contacto */
+footer.site-footer{grid-template-columns:auto auto 1fr;align-items:start;row-gap:34px}
+footer.site-footer .footer-links{align-self:center}
+.footer-contact{display:grid;gap:8px;justify-self:end;font-size:clamp(14px,1.1vw,17px);color:#1a1a1a}
+.footer-contact-title{font:700 11px/1 Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--wine);margin:0 0 6px}
+.footer-contact a{display:flex;gap:14px;align-items:baseline}
+.footer-contact b{min-width:84px;font:700 11px/1 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#073d30}
+.footer-contact a:hover{text-decoration:underline}
+footer.site-footer .footer-copy{grid-column:1/-1;padding-top:22px;border-top:1px solid rgba(7,61,48,.25)}
+@media(max-width:900px){footer.site-footer{grid-template-columns:1fr}.footer-contact{justify-self:start}}
+
+/* Navbar fijo + menú hamburguesa */
+html{scroll-padding-top:96px}
+.site-header{position:sticky;top:0;z-index:60;box-shadow:0 1px 0 rgba(23,61,48,.12)}
+.site-header .header-tools .burger,.site-header nav.mobile-menu{display:none}
+@media(max-width:700px){
+  html{scroll-padding-top:72px}
+  .site-header .header-tools .burger{display:flex;flex-direction:column;justify-content:center;gap:6px;width:40px;height:40px;padding:0 8px;background:none;border:0;cursor:pointer;color:#101010;position:relative;z-index:62}
+  .site-header .header-tools .burger span{display:block;height:2px;width:100%;background:currentColor;border-radius:2px;transition:transform .25s,opacity .2s}
+  .site-header .header-tools .burger.is-open span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+  .site-header .header-tools .burger.is-open span:nth-child(2){opacity:0}
+  .site-header .header-tools .burger.is-open span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+  .site-header nav.mobile-menu{display:flex;flex-direction:column;justify-content:flex-start;gap:0;position:fixed;inset:68px 0 0 0;padding:28px 9vw 40px;overflow-y:auto;background:#fff4e7;z-index:61;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .25s,transform .25s,visibility .25s}
+  .site-header nav.mobile-menu.is-open{opacity:1;visibility:visible;transform:none}
+  .site-header nav.mobile-menu a{display:block;flex:none;font:400 clamp(34px,10.5vw,46px)/1.15 Georgia,serif;letter-spacing:-.03em;color:#073d32;padding:16px 0;border-bottom:1px solid rgba(7,61,48,.18)}
+  .site-header nav.mobile-menu a:active{color:var(--wine)}
+  .site-header .header-tools{gap:8px}
+}
+@media(max-width:700px){.site-header .header-tools nav.mobile-menu a{width:auto;height:auto;position:static;color:#073d32}}
+
+/* Navbar más compacto */
+.site-header{height:92px}
+.gruta-logo{width:96px}
+@media(max-width:900px){.site-header{height:80px}.gruta-logo{width:86px}}
+@media(max-width:700px){.site-header{height:68px}.gruta-logo{width:72px}}

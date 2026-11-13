@@ -3,14 +3,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import HeroScroll from "@/components/HeroScroll";
 import LangSwitch from "@/components/LangSwitch";
+import MobileMenu from "@/components/MobileMenu";
 import { LOCALES, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { PRIVACY_LINK, privacy } from "@/i18n/privacy";
+import { WHATSAPP_NUMBER } from "@/lib/products";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: { languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}`])) } };
+  return { alternates: { canonical: `/${lang}`, languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}`])) } };
 }
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
@@ -19,11 +21,35 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
   const d = getDictionary(lang);
   const t = d.home;
   const base = `/${lang}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "@id": "https://lagruta.net/#store",
+    name: "La Gruta",
+    url: `https://lagruta.net/${lang}`,
+    description: d.meta.homeDescription,
+    inLanguage: lang,
+    image: "https://lagruta.net/images/la-gruta-tienda.webp",
+    logo: "https://lagruta.net/images/la-gruta-logo.png",
+    telephone: "+34665420983",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Carrer de Verdi, 8",
+      postalCode: "08012",
+      addressLocality: "Barcelona",
+      addressRegion: "Catalunya",
+      addressCountry: "ES",
+    },
+    areaServed: "Worldwide",
+    paymentAccepted: "Credit Card, Debit Card, Bizum",
+    sameAs: ["https://www.instagram.com/lagrutabcn/"],
+  };
   return <main>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
     <header className="site-header">
       <a className="brand gruta-brand" href="#top"><img className="gruta-logo" src="/images/la-gruta-logo.png" alt={d.common.logoAlt} /></a>
-      <nav><Link href={`${base}/tienda`}>{t.navRetail}</Link><Link href={`${base}/mayorista`}>{t.navWholesale}</Link><a href="#coleccion">{t.navCollections}</a><a href="#historia">{t.navAbout}</a></nav>
-      <div className="header-tools" aria-label={t.tools}><LangSwitch lang={lang} label={d.common.language} /><Link href={`${base}/tienda`} aria-label={t.search} className="search-icon"></Link><Link href={`${base}/tienda`} aria-label={t.bag} className="bag-icon"></Link></div>
+      <nav><Link href={`${base}/tienda`}>{t.footerShop}</Link><a href="#historia">{t.navAbout}</a><a href="#contacto">{t.footerContact}</a></nav>
+      <div className="header-tools" aria-label={t.tools}><LangSwitch lang={lang} label={d.common.language} /><Link href={`${base}/tienda`} aria-label={t.bag} className="bag-icon"></Link><MobileMenu lang={lang} links={[{ label: t.footerShop, href: `${base}/tienda` }, { label: t.navAbout, href: "#historia" }, { label: t.footerContact, href: "#contacto" }]} /></div>
     </header>
 
     <section className="hero hero-reference" id="top">
@@ -35,7 +61,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </picture>
       <div className="hero-copy">
         <p className="eyebrow hero-kicker">{t.heroKicker}</p>
-        <h1>{t.heroLine1}<br/><span>{t.heroLine2}</span></h1>
+        <h1>{t.heroLine1}<br/><span>{t.heroLine2}</span><span className="sr-only">{t.seo.h1Extra}</span></h1>
         <p className="intro">{t.intro}</p>
         <Link className="button hero-button" href={`${base}/tienda`}>{t.viewShop}</Link>      </div>
     </section>
@@ -54,8 +80,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     </section>
 
     <section className="story" id="historia">
-      <div className="story-image"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/d709cd3e-ac5e-4259-bfa8-d4515a716ee3.webp" alt={t.storyAlt}/><span className="story-image-label">{t.storyLabel[0]}<br/>{t.storyLabel[1]}</span></div>
-      <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p><span className="story-flower">✿</span></div>
+      <div className="story-image"><img src="/images/la-gruta-tienda.webp" alt={t.storyAlt}/><span className="story-image-label">{t.storyLabel[0]}<br/>{t.storyLabel[1]}</span></div>
+      <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p><a className="story-link" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">{t.storyLink}</a><span className="story-flower">✿</span><span className="story-flower story-flower-2" aria-hidden="true">✿</span></div>
     </section>
 
     <section className="location" id="visitanos" aria-labelledby="location-title">
@@ -80,10 +106,15 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       </div>
     </section>
 
-    <footer className="site-footer">
+    <footer className="site-footer" id="contacto">
       <a className="footer-logo" href="#top"><img src="/images/la-gruta-logo.png" alt={d.common.logoAlt} /></a>
-      <nav className="footer-links" aria-label={t.footerNavAria}><Link href={`${base}/tienda`}>{t.footerShop}</Link><a href="#historia">{t.footerAbout}</a><a href="#visitanos">{t.footerContact}</a></nav>
-      <a className="footer-social" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer" aria-label={d.common.instagramAria}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg><span>@lagrutabcn</span></a>
+      <nav className="footer-links" aria-label={t.footerNavAria}><Link href={`${base}/tienda`}>{t.footerShop}</Link><Link href={`${base}/blog`}>Blog</Link><a href="#historia">{t.footerAbout}</a></nav>
+      <div className="footer-contact">
+        <p className="footer-contact-title">{t.footerContact}</p>
+        <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer"><b>WhatsApp</b> +34 665 42 09 83</a>
+        <a href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer" aria-label={d.common.instagramAria}><b>Instagram</b> @lagrutabcn</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Carrer+de+Verdi+8+08012+Barcelona" target="_blank" rel="noreferrer"><b>{t.locLabel}</b> {t.locAddress1}, {t.locAddress2}</a>
+      </div>
       <small className="footer-copy">© LA GRUTA 2026{PRIVACY_LINK && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
     </footer>
   </main>;

@@ -12,6 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   if (!isLocale(lang)) return {};
   const t = getDictionary(lang).meta;
   return {
+    metadataBase: new URL("https://lagruta.net"),
     title: t.homeTitle,
     description: t.homeDescription,
     openGraph: { locale: LOCALE_LABELS[lang].og, title: t.homeTitle, description: t.homeDescription },

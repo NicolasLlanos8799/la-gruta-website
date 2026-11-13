@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AutoRefresh from "./AutoRefresh";
 import LangSwitch from "./LangSwitch";
+import MobileMenu from "./MobileMenu";
 import { LOCALE_LABELS, fmt, type Locale } from "@/i18n/config";
 import { getDictionary, type Dict } from "@/i18n/dictionaries";
 import { PRIVACY_LINK, privacy } from "@/i18n/privacy";
@@ -162,17 +163,16 @@ export default function Shop({
           <img className="gruta-logo" src="/images/la-gruta-logo.png" alt={d.common.logoAlt} />
         </Link>
         <nav>
-          <Link href={`${base}#coleccion`}>{t.navCollections}</Link>
+          <Link href={`${base}/tienda`} aria-current="page">{d.home.footerShop}</Link>
           <Link href={`${base}#historia`}>{t.navAbout}</Link>
-          <Link href={`${base}/tienda`} aria-current="page">{t.navRetail}</Link>
-          <Link href={`${base}/tienda#mayorista`}>{t.navWholesale}</Link>
+          <Link href={`${base}#contacto`}>{d.home.footerContact}</Link>
         </nav>
         <div className="header-tools" aria-label={t.tools}>
           <LangSwitch lang={lang} label={d.common.language} />
-          <button className="search-icon" aria-label={t.search} onClick={() => document.getElementById("buscar")?.focus()} />
           <button className="bag-icon" onClick={() => setCartOpen(true)} aria-label={fmt(t.openBag, { n: count })}>
             {count > 0 && <span className="bag-count">{count}</span>}
           </button>
+          <MobileMenu lang={lang} links={[{ label: d.home.footerShop, href: `${base}/tienda` }, { label: t.navAbout, href: `${base}#historia` }, { label: d.home.footerContact, href: `${base}#contacto` }]} />
         </div>
       </header>
 
