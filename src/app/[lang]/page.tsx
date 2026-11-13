@@ -5,7 +5,7 @@ import HeroScroll from "@/components/HeroScroll";
 import LangSwitch from "@/components/LangSwitch";
 import { LOCALES, isLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
-import { PRIVACY_READY, privacy } from "@/i18n/privacy";
+import { PRIVACY_LINK, privacy } from "@/i18n/privacy";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
@@ -84,7 +84,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       <a className="footer-logo" href="#top"><img src="/images/la-gruta-logo.png" alt={d.common.logoAlt} /></a>
       <nav className="footer-links" aria-label={t.footerNavAria}><Link href={`${base}/tienda`}>{t.footerShop}</Link><a href="#historia">{t.footerAbout}</a><a href="#visitanos">{t.footerContact}</a></nav>
       <a className="footer-social" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer" aria-label={d.common.instagramAria}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg><span>@lagrutabcn</span></a>
-      <small className="footer-copy">© LA GRUTA 2026{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
+      <small className="footer-copy">© LA GRUTA 2026{PRIVACY_LINK && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
     </footer>
   </main>;
 }

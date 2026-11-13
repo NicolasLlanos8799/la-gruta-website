@@ -5,6 +5,9 @@ import type { Locale } from "./config";
  * sustituirse por los reales antes de activar PRIVACY_READY.
  * Formato de cada línea de `p`: "- " = elemento de lista, "> " = nota destacada, resto = párrafo. **negrita** admitida.
  */
+/** Muestra el enlace en el pie de página. */
+export const PRIVACY_LINK = true;
+/** false = aviso de borrador visible y página sin indexar (poner true con los datos reales). */
 export const PRIVACY_READY = false;
 
 export type PrivacyDoc = { title: string; updated: string; draft: string; intro: string; sections: { h: string; p: string[] }[] };
