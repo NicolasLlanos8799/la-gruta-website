@@ -274,7 +274,7 @@ export default function Shop({
         <p>
           {t.footerHelp}{" "}
           <a href={whatsappLink(t.wa.hello)} target="_blank" rel="noreferrer">
-            WhatsApp ↗
+            WhatsApp
           </a>
         </p>
         <small>{t.footerSmall}{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
