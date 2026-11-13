@@ -242,9 +242,21 @@
 }
 
 /* Tienda cerrada: "Próximamente" */
-.coming-soon{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;background:var(--paper);color:var(--ink)}
-.coming-soon-brand{font:34px Georgia,serif;letter-spacing:-2.5px;margin:0 0 28px}
-.coming-soon h1{font:400 clamp(52px,10vw,110px)/.9 Georgia,serif;letter-spacing:-.06em;margin:0 0 24px;color:var(--wine)}
-.coming-soon p{max-width:420px;font-size:15px;line-height:1.7;color:#493d39;margin:0 0 32px}
-.coming-soon .coming-soon-brand{color:var(--ink);max-width:none}
-.coming-soon-link{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid;padding-bottom:4px}
+.cs{min-height:100vh;min-height:100dvh;position:relative;overflow:hidden;display:grid;place-items:center;padding:40px 20px 90px;background:var(--yellow);color:var(--ink)}
+.cs-burst{position:absolute;left:50%;top:50%;width:max(160vw,1500px);aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:repeating-conic-gradient(from -8deg at 50% 50%,#173d30 0deg 3deg,#fbf5e9 3deg 7deg,#e95e86 7deg 10deg,#fbf5e9 10deg 14deg,#f0783e 14deg 17deg,#fbf5e9 17deg 21deg,#f5cf48 21deg 24deg,#fbf5e9 24deg 28deg,#8ca9dc 28deg 31deg,#fbf5e9 31deg 35deg);opacity:.9;animation:cs-spin 140s linear infinite}
+.cs-card{position:relative;z-index:1;width:min(560px,100%);display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--paper);border:2px solid var(--ink);border-radius:46% 46% 18px 18px/22% 22% 18px 18px;padding:clamp(44px,8vw,72px) clamp(24px,6vw,56px) clamp(34px,6vw,48px);box-shadow:14px 14px 0 var(--ink);animation:cs-in .8s cubic-bezier(.2,.7,.2,1) both}
+.cs-logo{width:clamp(150px,34vw,210px);height:auto;display:block;margin-bottom:22px}
+.cs-kicker{margin:0 0 14px;background:var(--ink);color:#fff;padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:.17em;text-transform:uppercase}
+.cs h1{font:400 clamp(58px,13vw,104px)/.86 Georgia,serif;letter-spacing:-.07em;margin:6px 0 20px}
+.cs h1 em{color:var(--hotpink);font-style:italic}
+.cs-body{max-width:380px;margin:0 0 30px;font-size:15px;line-height:1.7;color:#493d39}
+.cs-button{display:inline-flex;gap:14px;align-items:center;background:var(--ink);color:#fff;padding:16px 24px;font-size:12px;font-weight:700;letter-spacing:.04em;box-shadow:5px 5px 0 var(--yellow);transition:transform .2s ease,background .2s ease}
+.cs-button:hover{background:var(--wine);transform:translate(-2px,-2px)}
+.cs-sticker{position:absolute;right:-18px;top:-26px;width:104px;height:104px;border-radius:50%;background:var(--pink);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--wine);display:grid;place-content:center;font:700 14px/1.1 Arial,sans-serif;text-transform:uppercase;letter-spacing:.04em;transform:rotate(12deg);animation:cs-wiggle 4s ease-in-out infinite}
+.cs-band{position:absolute;left:0;right:0;bottom:0;z-index:2;height:52px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:space-around;gap:24px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;overflow:hidden}
+.cs-band b{color:var(--yellow);font-size:18px;margin-left:12px;letter-spacing:0}
+@keyframes cs-spin{to{rotate:360deg}}
+@keyframes cs-in{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes cs-wiggle{0%,100%{transform:rotate(12deg)}50%{transform:rotate(5deg) scale(1.05)}}
+@media (max-width:520px){.cs-sticker{right:-6px;top:-30px;width:88px;height:88px;font-size:12px}.cs-card{box-shadow:9px 9px 0 var(--ink)}.cs-band span:nth-child(n+4){display:none}}
+@media (prefers-reduced-motion:reduce){.cs-burst,.cs-card,.cs-sticker{animation:none}}
