@@ -85,15 +85,6 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     </section>
 
     <section className="location" id="visitanos" aria-labelledby="location-title">
-      <svg className="location-petals" viewBox="0 0 360 420" aria-hidden="true" focusable="false">
-        <g strokeLinecap="round" fill="none">
-          <line x1="400" y1="-30" x2="40" y2="30" stroke="#f7f1e6" strokeWidth="78" />
-          <line x1="400" y1="-30" x2="88" y2="128" stroke="#fdd649" strokeWidth="66" />
-          <line x1="400" y1="-30" x2="150" y2="228" stroke="#f9a0a6" strokeWidth="64" />
-          <line x1="400" y1="-30" x2="285" y2="345" stroke="#ff9a3c" strokeWidth="58" />
-          <line x1="400" y1="-30" x2="172" y2="372" stroke="#6c2036" strokeWidth="62" />
-        </g>
-      </svg>
       <div className="location-main">
         <p className="location-eyebrow"><span>{t.locEyebrow}</span><i aria-hidden="true" /></p>
         <h2 id="location-title">{t.locTitle1}<br/>{t.locTitle2} <em>{t.locEm}</em></h2>
