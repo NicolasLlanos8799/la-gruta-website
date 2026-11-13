@@ -225,3 +225,18 @@
 @media(max-width:700px){.wholesale-promo{flex-wrap:wrap;gap:12px;padding:18px}.wholesale-promo .btn-ghost{width:100%}}
 .wholesale-note{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:#fff;border:1px dashed var(--wine);font-size:13px;line-height:1.5;color:var(--wine);font-weight:700}
 .wholesale-ship.on{background:#f5e3a9}
+
+/* Pop-up de producto en móvil: nada se sale por los costados */
+.modal,.modal *{box-sizing:border-box}
+.modal>*{min-width:0}
+.product-modal .modal-body h2,.product-modal .desc,.product-modal .details li,.wholesale-note{overflow-wrap:anywhere}
+@media(max-width:800px){
+ .overlay:not(.side){padding:8px}
+ .modal,.modal.product-modal{grid-template-columns:minmax(0,1fr);width:100%;max-width:100%;overflow-x:hidden}
+ .product-modal .modal-media{width:100%}
+ .product-modal .modal-body{padding:22px 18px 24px;min-width:0}
+ .product-modal .modal-body h2{font-size:clamp(30px,9vw,40px)}
+ .modal-buy{flex-wrap:wrap}
+ .modal-buy .btn-primary{flex:1 1 100%;min-width:0;padding:16px 14px;font-size:14px;order:2}
+ .modal-buy .qty{order:1}
+}
