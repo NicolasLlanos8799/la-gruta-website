@@ -48,6 +48,20 @@ export type Dict = {
     visitAddress: string;
     visitButton: string;
     footerTagline: string;
+    locEyebrow: string;
+    locTitle1: string;
+    locTitle2: string;
+    locEm: string;
+    locLead1: string;
+    locLead2: string;
+    locLabel: string;
+    locAddress1: string;
+    locAddress2: string;
+    locButton: string;
+    footerNavAria: string;
+    footerShop: string;
+    footerAbout: string;
+    footerContact: string;
   };
   shop: {
     brandAria: string;
@@ -219,6 +233,20 @@ const es: Dict = {
     visitAddress: "Dirección y horarios por confirmar",
     visitButton: "Ven a saludarnos ↗",
     footerTagline: "MODA Y ARTE · BARCELONA",
+    locEyebrow: "NUESTRO LOCAL EN BARCELONA",
+    locTitle1: "Ven a conocernos",
+    locTitle2: "a",
+    locEm: "La Gruta.",
+    locLead1: "Ropa, arte y piezas con historia.",
+    locLead2: "Te esperamos en nuestro local en el corazón de Barcelona.",
+    locLabel: "Dirección",
+    locAddress1: "Carrer de Verdi, 8",
+    locAddress2: "08012 Gràcia, Barcelona",
+    locButton: "Cómo llegar",
+    footerNavAria: "Pie de página",
+    footerShop: "Tienda",
+    footerAbout: "Sobre La Gruta",
+    footerContact: "Contacto",
   },
   shop: {
     brandAria: "La Gruta — inicio",
@@ -390,6 +418,20 @@ const ca: Dict = {
     visitAddress: "Adreça i horaris per confirmar",
     visitButton: "Vine a saludar-nos ↗",
     footerTagline: "MODA I ART · BARCELONA",
+    locEyebrow: "EL NOSTRE LOCAL A BARCELONA",
+    locTitle1: "Vine a conèixer-nos",
+    locTitle2: "a",
+    locEm: "La Gruta.",
+    locLead1: "Roba, art i peces amb història.",
+    locLead2: "T'esperem al nostre local al cor de Barcelona.",
+    locLabel: "Adreça",
+    locAddress1: "Carrer de Verdi, 8",
+    locAddress2: "08012 Gràcia, Barcelona",
+    locButton: "Com arribar-hi",
+    footerNavAria: "Peu de pàgina",
+    footerShop: "Botiga",
+    footerAbout: "Sobre La Gruta",
+    footerContact: "Contacte",
   },
   shop: {
     brandAria: "La Gruta — inici",
@@ -561,6 +603,20 @@ const en: Dict = {
     visitAddress: "Address and opening hours to be confirmed",
     visitButton: "Come and say hello ↗",
     footerTagline: "FASHION & ART · BARCELONA",
+    locEyebrow: "OUR SHOP IN BARCELONA",
+    locTitle1: "Come and meet us",
+    locTitle2: "at",
+    locEm: "La Gruta.",
+    locLead1: "Clothes, art and pieces with a story.",
+    locLead2: "We're waiting for you at our shop in the heart of Barcelona.",
+    locLabel: "Address",
+    locAddress1: "Carrer de Verdi, 8",
+    locAddress2: "08012 Gràcia, Barcelona",
+    locButton: "Get directions",
+    footerNavAria: "Footer",
+    footerShop: "Shop",
+    footerAbout: "About La Gruta",
+    footerContact: "Contact",
   },
   shop: {
     brandAria: "La Gruta — home",

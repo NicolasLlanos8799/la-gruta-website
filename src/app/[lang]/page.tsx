@@ -37,8 +37,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
         <p className="eyebrow hero-kicker">{t.heroKicker}</p>
         <h1>{t.heroLine1}<br/><span>{t.heroLine2}</span></h1>
         <p className="intro">{t.intro}</p>
-        <Link className="button hero-button" href={`${base}/tienda`}>{t.viewShop}</Link><Link className="hero-wholesale" href={`${base}/mayorista`}>{t.wholesaleLink}</Link>
-      </div>
+        <Link className="button hero-button" href={`${base}/tienda`}>{t.viewShop}</Link>      </div>
     </section>
 
     <section className="collection-editorial" id="coleccion" aria-labelledby="collection-title">
@@ -56,15 +55,36 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
     <section className="story" id="historia">
       <div className="story-image"><img src="https://d2ol7oe51mr4n9.cloudfront.net/user_3LmqSmQCW0ChedDbsb7zoEZlAOF/d709cd3e-ac5e-4259-bfa8-d4515a716ee3.webp" alt={t.storyAlt}/><span className="story-image-label">{t.storyLabel[0]}<br/>{t.storyLabel[1]}</span></div>
-      <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p><a href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">{t.storyLink}</a><span className="story-flower">✿</span></div>
+      <div className="story-copy"><p className="eyebrow">{t.storyEyebrow}</p><h2>{t.storyTitle1}<br/>{t.storyTitle2} <em>{t.storyEm}</em></h2><p>{t.storyText}</p><span className="story-flower">✿</span></div>
     </section>
 
-    <section className="visit" id="visitanos">
-      <div className="visit-shape">{t.visitShape[0]}<br/>{t.visitShape[1]}</div>
-      <div className="visit-main"><p className="eyebrow">{t.visitEyebrow}</p><h2>{t.visitTitle1}<br/><em>{t.visitEm}</em></h2><p>{t.visitText}</p></div>
-      <div className="visit-info"><strong>LG<span>✳</span></strong><p>{t.visitCity}</p><p>{t.visitAddress}</p><a className="button light" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">{t.visitButton}</a></div>
+    <section className="location" id="visitanos" aria-labelledby="location-title">
+      <svg className="location-petals" viewBox="0 0 360 420" aria-hidden="true" focusable="false">
+        <g strokeLinecap="round" fill="none">
+          <line x1="400" y1="-30" x2="40" y2="30" stroke="#f7f1e6" strokeWidth="78" />
+          <line x1="400" y1="-30" x2="88" y2="128" stroke="#fdd649" strokeWidth="66" />
+          <line x1="400" y1="-30" x2="150" y2="228" stroke="#f9a0a6" strokeWidth="64" />
+          <line x1="400" y1="-30" x2="285" y2="345" stroke="#ff9a3c" strokeWidth="58" />
+          <line x1="400" y1="-30" x2="172" y2="372" stroke="#6c2036" strokeWidth="62" />
+        </g>
+      </svg>
+      <div className="location-main">
+        <p className="location-eyebrow"><span>{t.locEyebrow}</span><i aria-hidden="true" /></p>
+        <h2 id="location-title">{t.locTitle1}<br/>{t.locTitle2} <em>{t.locEm}</em></h2>
+        <p className="location-lead">{t.locLead1}<br/>{t.locLead2}</p>
+      </div>
+      <div className="location-info">
+        <p className="location-label">{t.locLabel}</p>
+        <address>{t.locAddress1}<br/>{t.locAddress2}</address>
+        <a className="location-button" href="https://www.google.com/maps/search/?api=1&query=Carrer+de+Verdi+8+08012+Barcelona" target="_blank" rel="noreferrer">{t.locButton}</a>
+      </div>
     </section>
 
-    <footer><div><a className="brand" href="#top">la gruta<span>✳</span></a><p>{t.footerTagline}</p></div><a className="footer-social" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer">@lagrutabcn ↗</a><small>© LA GRUTA 2026{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small></footer>
+    <footer className="site-footer">
+      <a className="footer-logo" href="#top"><img src="/images/la-gruta-logo.png" alt={d.common.logoAlt} /></a>
+      <nav className="footer-links" aria-label={t.footerNavAria}><Link href={`${base}/tienda`}>{t.footerShop}</Link><a href="#historia">{t.footerAbout}</a><a href="#visitanos">{t.footerContact}</a></nav>
+      <a className="footer-social" href="https://www.instagram.com/lagrutabcn/" target="_blank" rel="noreferrer" aria-label={d.common.instagramAria}><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg><span>@lagrutabcn</span></a>
+      <small className="footer-copy">© LA GRUTA 2026{PRIVACY_READY && <> · <Link href={`${base}/privacidad`}>{privacy[lang].title}</Link></>}</small>
+    </footer>
   </main>;
 }
