@@ -291,3 +291,12 @@ html{scroll-padding-top:96px}
 .trade-cards p{margin:0;font-size:15px;line-height:1.6;flex:1}
 .trade-cards a{font-size:13px;font-weight:700;letter-spacing:.06em;border-bottom:1.5px solid var(--ink);align-self:flex-start;padding-bottom:3px}
 @media(max-width:900px){.trade{grid-template-columns:1fr}.trade-cards{grid-template-columns:1fr}}
+
+/* Ubicación: centrado correcto en móvil/tablet */
+@media(max-width:900px){
+  .location-info{padding:30px 0 0;text-align:center}
+  .location-info:before{left:50%;right:auto;width:60px;margin-left:-30px}
+  .location-label,.location-eyebrow span{padding-left:.28em}
+  .location-button{justify-self:center}
+  .location-info{justify-items:center}
+}
